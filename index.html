@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>立群醫療體系 — 問診表單</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --teal-900: #134E4A;
+    --teal-800: #115E59;
+    --teal-700: #0F766E;
+    --teal-600: #0E7490;
+    --teal-500: #14B8A6;
+    --teal-400: #2DD4BF;
+    --teal-100: #CCFBF1;
+    --teal-50: #F0FDFA;
+    --slate-900: #0F172A;
+    --slate-700: #334155;
+    --slate-500: #64748B;
+    --slate-400: #94A3B8;
+    --slate-300: #CBD5E1;
+    --slate-200: #E2E8F0;
+    --slate-100: #F1F5F9;
+    --slate-50: #F8FAFC;
+    --white: #FFFFFF;
+    --rose-500: #F43F5E;
+    --rose-50: #FFF1F2;
+    --amber-500: #F59E0B;
+    --amber-50: #FFFBEB;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(180deg, var(--teal-600) 0%, var(--teal-800) 280px, var(--slate-100) 280px);
+    min-height: 100vh;
+    color: var(--slate-900);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── Header ─── */
+  .header {
+    position: relative;
+    padding: 36px 24px 28px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; left: -20px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+
+  .logo-img {
+    width: 64px; height: 64px;
+    border-radius: 16px;
+    background: var(--white);
+    padding: 4px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    margin-bottom: 14px;
+    object-fit: contain;
+  }
+
+  .header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+  .header .subtitle {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+  .header .datetime {
+    display: inline-block;
+    padding: 5px 14px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.9);
+    font-weight: 400;
+    backdrop-filter: blur(4px);
+  }
+
+  /* ─── Form Container ─── */
+  .form-wrap {
+    position: relative;
+    z-index: 1;
+    padding: 0 12px 40px;
+    margin-top: -8px;
+  }
+
+  /* ─── Section Card ─── */
+  .section {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 20px 18px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+    animation: slideUp 0.5s ease both;
+  }
+  .section:nth-child(1) { animation-delay: 0.05s; }
+  .section:nth-child(2) { animation-delay: 0.1s; }
+  .section:nth-child(3) { animation-delay: 0.15s; }
+  .section:nth-child(4) { animation-delay: 0.2s; }
+  .section:nth-child(5) { animation-delay: 0.25s; }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--teal-800);
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--teal-50);
+  }
+  .section-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    background: var(--teal-50);
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  /* ─── Input Fields ─── */
+  .field-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .field-row:last-child { margin-bottom: 0; }
+
+  .field { flex: 1; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--slate-500);
+    margin-bottom: 5px;
+    letter-spacing: 0.3px;
+  }
+  .field label .optional {
+    font-weight: 400;
+    color: var(--slate-400);
+    font-size: 11px;
+  }
+  .field input, .field textarea, .field select {
+    width: 100%;
+    height: 44px;
+    border: 1.5px solid var(--slate-200);
+    border-radius: 10px;
+    padding: 0 14px;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--slate-900);
+    background: var(--slate-50);
+    transition: all 0.2s;
+    outline: none;
+    -webkit-appearance: none;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus {
+    border-color: var(--teal-500);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(14,116,144,0.1);
+  }
+  .field input::placeholder, .field textarea::placeholder {
+    color: var(--slate-400);
+    font-size: 13px;
+  }
+  .field input[type="number"] { -moz-appearance: textfield; }
+  .field input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .field textarea {
+    height: 80px;
+    padding: 12px 14px;
+    resize: none;
+    line-height: 1.5;
+  }
+  .field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+  }
+
+  .field-sm { flex: 0 0 100px; }
+
+  /* ─── Inline Options ─── */
+  .option-group { margin-bottom: 12px; }
+  .option-group:last-child { margin-bottom: 0; }
+  .option-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--slate-500);
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+  }
+  .option-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .opt-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 14px;
+    border: 1.5px solid var(--slate-200);
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--slate-700);
+    background: var(--white);
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .opt-btn:active { transform: scale(0.96); }
+  .opt-btn.selected {
+    background: var(--teal-600);
+    color: var(--white);
+    border-color: var(--teal-600);
+    box-shadow: 0 2px 8px rgba(14,116,144,0.25);
+  }
+  .opt-btn.selected-rose {
+    background: var(--rose-500);
+    color: var(--white);
+    border-color: var(--rose-500);
+    box-shadow: 0 2px 8px rgba(244,63,94,0.25);
+  }
+  .opt-btn.selected-amber {
+    background: var(--amber-500);
+    color: var(--white);
+    border-color: var(--amber-500);
+    box-shadow: 0 2px 8px rgba(245,158,11,0.25);
+  }
+
+  /* ─── Expand panels ─── */
+  .allergy-detail, .chip-expand, .followup-panel {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+  .allergy-detail.show { max-height: 60px; opacity: 1; margin-top: 8px; }
+  .chip-expand.show { max-height: 80px; opacity: 1; margin-top: 8px; }
+  .followup-panel.show { max-height: 140px; opacity: 1; margin-top: 10px; }
+
+  .allergy-detail input {
+    width: 100%;
+    height: 40px;
+    border: 1.5px solid var(--rose-500);
+    border-radius: 10px;
+    padding: 0 14px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--slate-900);
+    background: var(--rose-50);
+    outline: none;
+  }
+  .chip-expand input {
+    width: 100%;
+    height: 38px;
+    border: 1.5px solid var(--teal-500);
+    border-radius: 10px;
+    padding: 0 14px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--slate-900);
+    background: var(--teal-50);
+    outline: none;
+  }
+
+  /* ─── Follow-up row ─── */
+  .followup-panel {
+    background: var(--slate-50);
+    border-radius: 10px;
+    padding: 0;
+  }
+  .followup-panel.show { padding: 10px 12px; }
+  .followup-inner {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  .followup-inner .field { flex: 1; }
+  .followup-inner .field label {
+    font-size: 11px;
+    color: var(--slate-500);
+    margin-bottom: 4px;
+  }
+  .followup-inner .field select,
+  .followup-inner .field input {
+    height: 38px;
+    font-size: 13px;
+    background: var(--white);
+  }
+  .medicated-detail {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: all 0.3s ease;
+    margin-top: 0;
+  }
+  .medicated-detail.show { max-height: 50px; opacity: 1; margin-top: 8px; }
+  .medicated-detail input {
+    width: 100%;
+    height: 36px;
+    border: 1.5px solid var(--amber-500);
+    border-radius: 10px;
+    padding: 0 12px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--slate-900);
+    background: var(--amber-50);
+    outline: none;
+  }
+
+  /* ─── Symptom Chips ─── */
+  .symptom-group { margin-bottom: 14px; }
+  .symptom-group:last-child { margin-bottom: 0; }
+  .symptom-cat {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--slate-700);
+    margin-bottom: 8px;
+  }
+  .cat-icon {
+    font-size: 16px;
+    line-height: 1;
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 16px;
+    border: 1.5px solid var(--slate-200);
+    border-radius: 24px;
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 400;
+    color: var(--slate-700);
+    background: var(--white);
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .chip:active { transform: scale(0.95); }
+  .chip.selected {
+    background: var(--teal-600);
+    color: var(--white);
+    border-color: var(--teal-600);
+    font-weight: 500;
+    box-shadow: 0 2px 12px rgba(14,116,144,0.3);
+  }
+  .chip.selected::before {
+    content: '\2713\00a0';
+    font-size: 12px;
+  }
+
+  /* ─── Submit ─── */
+  .submit-wrap {
+    padding: 0 12px 32px;
+    animation: slideUp 0.5s ease 0.3s both;
+  }
+  .submit-btn {
+    width: 100%;
+    height: 54px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--teal-600), var(--teal-800));
+    color: var(--white);
+    font-size: 17px;
+    font-weight: 700;
+    font-family: inherit;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(14,116,144,0.35);
+    position: relative;
+    overflow: hidden;
+  }
+  .submit-btn:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 10px rgba(14,116,144,0.3);
+  }
+  .submit-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.1));
+  }
+  .submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* ─── Loading spinner ─── */
+  .spinner {
+    display: inline-block;
+    width: 20px; height: 20px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-top-color: var(--white);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ─── Thank You ─── */
+  .thank-you {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 24px;
+    text-align: center;
+    background: var(--white);
+    animation: fadeIn 0.6s ease;
+  }
+  .thank-you.show { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .ty-check {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal-500), var(--teal-600));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    color: var(--white);
+    margin-bottom: 24px;
+    box-shadow: 0 8px 32px rgba(14,116,144,0.3);
+    animation: popIn 0.5s ease 0.2s both;
+  }
+  @keyframes popIn {
+    from { transform: scale(0); }
+    50% { transform: scale(1.15); }
+    to { transform: scale(1); }
+  }
+  .ty-title {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--teal-800);
+    margin-bottom: 8px;
+  }
+  .ty-msg {
+    font-size: 15px;
+    color: var(--slate-500);
+    line-height: 1.6;
+    max-width: 280px;
+  }
+  .ty-name {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 24px;
+    background: var(--teal-50);
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--teal-700);
+  }
+
+  /* ─── Footer ─── */
+  .footer {
+    text-align: center;
+    padding: 12px 0 28px;
+    font-size: 11px;
+    color: var(--slate-400);
+    letter-spacing: 0.3px;
+  }
+
+  .form-container.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<!-- ═══ Form ═══ -->
+<div class="form-container" id="formContainer">
+  <div class="header">
+    <img src="logo.png" alt="立群" class="logo-img">
+    <h1>立群醫療體系 問診表單</h1>
+    <p class="subtitle">請填寫以下資訊，協助醫師了解您的需求</p>
+    <div class="datetime" id="datetime"></div>
+  </div>
+
+  <div class="form-wrap">
+
+    <!-- ── 基本資料 ── -->
+    <div class="section">
+      <div class="section-title">
+        <span class="section-icon">📋</span> 基本資料
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>診間</label>
+          <select id="clinic">
+            <option value="">請選擇</option>
+            <option value="一診">一診</option>
+            <option value="二診">二診</option>
+            <option value="三診">三診</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>診號 <span class="optional">(選填)</span></label>
+          <input type="text" id="patientId" placeholder="如有診號請填寫">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>姓名</label>
+          <input type="text" id="name" placeholder="請輸入姓名">
+        </div>
+        <div class="field field-sm">
+          <label>體重 <span class="optional">(公斤)</span></label>
+          <input type="number" id="weight" placeholder="kg">
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 特殊需求 ── -->
+    <div class="section">
+      <div class="section-title">
+        <span class="section-icon">📌</span> 特殊需求
+      </div>
+      <div class="option-group">
+        <div class="option-label">需要文件</div>
+        <div class="option-row">
+          <div class="opt-btn" data-group="docs" data-value="診斷證明書">📄 診斷證明書</div>
+          <div class="opt-btn" data-group="docs" data-value="就醫證明">📄 就醫證明</div>
+        </div>
+      </div>
+      <div class="option-group">
+        <div class="option-label">藥物偏好</div>
+        <div class="option-row">
+          <div class="opt-btn" data-group="medForm" data-value="藥丸" data-radio="medForm">💊 藥丸</div>
+          <div class="opt-btn" data-group="medForm" data-value="藥粉" data-radio="medForm">🧂 藥粉</div>
+        </div>
+      </div>
+      <div class="option-group">
+        <div class="option-label">藥物過敏</div>
+        <div class="option-row">
+          <div class="opt-btn" data-group="allergy" data-value="否" data-radio="allergy" id="allergyNo">否</div>
+          <div class="opt-btn" data-group="allergy" data-value="是" data-radio="allergy" id="allergyYes">⚠️ 是</div>
+        </div>
+        <div class="allergy-detail" id="allergyDetail">
+          <input type="text" id="allergyText" placeholder="請說明過敏藥物名稱">
+        </div>
+      </div>
+      <div class="option-group">
+        <div class="option-label">其他</div>
+        <div class="option-row">
+          <div class="opt-btn" data-group="pregnancy" data-value="懷孕" id="pregnancyBtn">🤰 懷孕</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 症狀 ── -->
+    <div class="section">
+      <div class="section-title">
+        <span class="section-icon">🩺</span> 請勾選您的症狀
+      </div>
+
+      <!-- 發燒（獨立） -->
+      <div class="symptom-group">
+        <div class="symptom-cat"><span class="cat-icon">🌡️</span> 發燒 / 畏寒</div>
+        <div class="chips" data-category="fever">
+          <div class="chip">發燒</div>
+          <div class="chip">畏寒</div>
+          <div class="chip">忽冷忽熱</div>
+        </div>
+        <div class="followup-panel" id="feverFollowup">
+          <div class="followup-inner">
+            <div class="field">
+              <label>持續幾天？</label>
+              <select id="feverDays">
+                <option value="">請選擇</option>
+                <option value="今天開始">今天開始</option>
+                <option value="1天">1 天</option>
+                <option value="2-3天">2-3 天</option>
+                <option value="4-6天">4-6 天</option>
+                <option value="一週">約一週</option>
+                <option value="一週以上">一週以上</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 耳鼻喉 -->
+      <div class="symptom-group">
+        <div class="symptom-cat"><span class="cat-icon">👂</span> 耳鼻喉</div>
+        <div class="chips" data-category="ent">
+          <div class="chip">咳嗽</div>
+          <div class="chip" data-expand="phlegmColor">有痰</div>
+          <div class="chip">流鼻水</div>
+          <div class="chip">鼻涕</div>
+          <div class="chip">鼻塞</div>
+          <div class="chip">喉嚨痛</div>
+          <div class="chip">喉嚨卡</div>
+          <div class="chip">打噴嚏</div>
+          <div class="chip">耳痛</div>
+          <div class="chip">頭暈</div>
+          <div class="chip">流鼻血</div>
+        </div>
+        <div class="chip-expand" id="phlegmColor">
+          <div style="font-size:12px;color:var(--slate-500);margin-bottom:5px;">痰的顏色</div>
+          <div class="option-row">
+            <div class="opt-btn" data-group="phlegm" data-value="透明" data-radio="phlegm" style="padding:6px 10px;font-size:13px;">透明</div>
+            <div class="opt-btn" data-group="phlegm" data-value="白" data-radio="phlegm" style="padding:6px 10px;font-size:13px;">白</div>
+            <div class="opt-btn" data-group="phlegm" data-value="黃" data-radio="phlegm" style="padding:6px 10px;font-size:13px;">黃</div>
+            <div class="opt-btn" data-group="phlegm" data-value="綠" data-radio="phlegm" style="padding:6px 10px;font-size:13px;">綠</div>
+            <div class="opt-btn" data-group="phlegm" data-value="褐色" data-radio="phlegm" style="padding:6px 10px;font-size:13px;">褐色</div>
+            <div class="opt-btn" data-group="phlegm" data-value="血色" data-radio="phlegm" style="padding:6px 10px;font-size:13px;">血色</div>
+          </div>
+        </div>
+        <div class="followup-panel" id="entFollowup">
+          <div class="followup-inner">
+            <div class="field">
+              <label>持續幾天？</label>
+              <select id="entDays">
+                <option value="">請選擇</option>
+                <option value="1天">1 天</option>
+                <option value="2-3天">2-3 天</option>
+                <option value="4-6天">4-6 天</option>
+                <option value="一週">約一週</option>
+                <option value="一週以上">一週以上</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>是否曾用藥？</label>
+              <select id="entMedicated" onchange="toggleMedDetail('ent')">
+                <option value="">請選擇</option>
+                <option value="否">否</option>
+                <option value="是">是</option>
+              </select>
+            </div>
+          </div>
+          <div class="medicated-detail" id="entMedDetail">
+            <input type="text" id="entMedText" placeholder="用過什麼藥？（如：感冒藥、診所開的藥等）">
+          </div>
+        </div>
+      </div>
+
+      <!-- 腸胃 -->
+      <div class="symptom-group">
+        <div class="symptom-cat"><span class="cat-icon">🫄</span> 腸胃</div>
+        <div class="chips" data-category="gi">
+          <div class="chip">腹痛</div>
+          <div class="chip">噁心</div>
+          <div class="chip">想吐</div>
+          <div class="chip">拉肚子</div>
+          <div class="chip">嘔吐</div>
+          <div class="chip">便祕</div>
+          <div class="chip">黑便</div>
+          <div class="chip">血便</div>
+          <div class="chip">痔瘡</div>
+        </div>
+        <div class="followup-panel" id="giFollowup">
+          <div class="followup-inner">
+            <div class="field">
+              <label>持續幾天？</label>
+              <select id="giDays">
+                <option value="">請選擇</option>
+                <option value="1天">1 天</option>
+                <option value="2-3天">2-3 天</option>
+                <option value="4-6天">4-6 天</option>
+                <option value="一週">約一週</option>
+                <option value="一週以上">一週以上</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>是否曾用藥？</label>
+              <select id="giMedicated" onchange="toggleMedDetail('gi')">
+                <option value="">請選擇</option>
+                <option value="否">否</option>
+                <option value="是">是</option>
+              </select>
+            </div>
+          </div>
+          <div class="medicated-detail" id="giMedDetail">
+            <input type="text" id="giMedText" placeholder="用過什麼藥？（如：胃藥、止瀉藥等）">
+          </div>
+        </div>
+      </div>
+
+      <!-- 慢性病 -->
+      <div class="symptom-group">
+        <div class="symptom-cat"><span class="cat-icon">💗</span> 慢性病</div>
+        <div class="chips" data-category="chronic">
+          <div class="chip">高血壓</div>
+          <div class="chip">糖尿病</div>
+          <div class="chip">高血脂</div>
+          <div class="chip">痛風</div>
+          <div class="chip">甲狀腺</div>
+          <div class="chip" data-expand="chronicOther">其他</div>
+        </div>
+        <div class="chip-expand" id="chronicOther">
+          <input type="text" id="chronicOtherText" placeholder="請說明其他慢性病">
+        </div>
+      </div>
+
+      <!-- 其他需求 -->
+      <div class="symptom-group">
+        <div class="symptom-cat"><span class="cat-icon">🏥</span> 其他需求</div>
+        <div class="chips" data-category="other">
+          <div class="chip">健檢/抽血</div>
+          <div class="chip">減重</div>
+          <div class="chip">皮膚問題</div>
+          <div class="chip">失眠</div>
+          <div class="chip">旅遊諮詢</div>
+          <div class="chip">戒菸</div>
+          <div class="chip">想開慢性處方籤</div>
+          <div class="chip">自律神經失調</div>
+          <div class="chip" data-expand="vaccineDetail">疫苗</div>
+        </div>
+        <div class="chip-expand" id="vaccineDetail">
+          <input type="text" id="vaccineText" placeholder="請說明疫苗種類">
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 其他問題 ── -->
+    <div class="section">
+      <div class="section-title">
+        <span class="section-icon">💬</span> 其他問題
+      </div>
+      <div class="field">
+        <textarea id="otherNotes" placeholder="如有其他想告訴醫師的事項，請在此填寫"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="submit-wrap">
+    <button class="submit-btn" id="submitBtn">送 出 表 單</button>
+  </div>
+
+  <div class="footer">立群醫療體系 &copy; 2026 — 您的資料僅供本次看診使用</div>
+</div>
+
+<!-- ═══ Thank You ═══ -->
+<div class="thank-you" id="thankYou">
+  <div class="ty-check">✓</div>
+  <div class="ty-title">表單已送出</div>
+  <div class="ty-msg">感謝您的填寫！<br>醫師將於看診前參閱您的資訊</div>
+  <div class="ty-name" id="tyName"></div>
+  <div class="footer" style="margin-top: 40px;">立群醫療體系 &copy; 2026</div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  Google Apps Script Web App URL
+//  部署後將網址填入此處即可串接 Google Sheets
+// ══════════════════════════════════════════════════════
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyVFakl4ORVX2mFFgC4h_a694Ow8jBvfTFDQQWuxxi5uxSWM5Q4FMU2TvGUqv4x59Q/exec';
+
+(function() {
+
+  // ── 自動帶入日期時間 ──
+  function updateDateTime() {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+    const w = weekdays[now.getDay()];
+    const h = String(now.getHours()).padStart(2, '0');
+    const min = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('datetime').textContent = `${y}/${m}/${d}（${w}）${h}:${min}`;
+  }
+  updateDateTime();
+  setInterval(updateDateTime, 30000);
+
+  // ── 追蹤各類已選症狀數量，控制 followup 顯示 ──
+  function updateFollowup(category) {
+    const container = document.querySelector(`.chips[data-category="${category}"]`);
+    const count = container.querySelectorAll('.chip.selected').length;
+    const panel = document.getElementById(category + 'Followup');
+    if (!panel) return;
+    if (count > 0) {
+      panel.classList.add('show');
+    } else {
+      panel.classList.remove('show');
+      // Reset followup fields
+      const daysSel = panel.querySelector('select[id$="Days"]');
+      const medSel = panel.querySelector('select[id$="Medicated"]');
+      if (daysSel) daysSel.value = '';
+      if (medSel) { medSel.value = ''; toggleMedDetail(category); }
+    }
+  }
+
+  // ── Toggle Chips ──
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      chip.classList.toggle('selected');
+      // Expand for "其他" / "疫苗"
+      const expandId = chip.dataset.expand;
+      if (expandId) {
+        const el = document.getElementById(expandId);
+        if (chip.classList.contains('selected')) {
+          el.classList.add('show');
+          el.querySelector('input')?.focus();
+        } else {
+          el.classList.remove('show');
+          el.querySelector('input').value = '';
+        }
+      }
+      // Update followup panels
+      const cat = chip.closest('.chips')?.dataset.category;
+      if (cat) updateFollowup(cat);
+    });
+  });
+
+  // ── Toggle Option Buttons ──
+  document.querySelectorAll('.opt-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const radioGroup = btn.dataset.radio;
+      if (radioGroup) {
+        document.querySelectorAll(`.opt-btn[data-radio="${radioGroup}"]`).forEach(b => {
+          b.classList.remove('selected', 'selected-rose', 'selected-amber');
+        });
+        btn.classList.add('selected');
+      } else if (btn.dataset.group === 'pregnancy') {
+        btn.classList.toggle('selected-amber');
+      } else {
+        btn.classList.toggle('selected');
+      }
+      // Allergy expand
+      if (btn.dataset.group === 'allergy') {
+        const detail = document.getElementById('allergyDetail');
+        if (btn.dataset.value === '是') {
+          detail.classList.add('show');
+          detail.querySelector('input')?.focus();
+        } else {
+          detail.classList.remove('show');
+          document.getElementById('allergyText').value = '';
+        }
+      }
+    });
+  });
+
+  // ── Collect Form Data ──
+  function collectData() {
+    const data = {
+      timestamp: new Date().toISOString(),
+      date: document.getElementById('datetime').textContent,
+      clinic: document.getElementById('clinic').value,
+      name: document.getElementById('name').value.trim(),
+      patientId: document.getElementById('patientId').value.trim(),
+      weight: document.getElementById('weight').value.trim(),
+      docs: [],
+      medPreference: '',
+      allergy: { hasAllergy: false, detail: '' },
+      pregnancy: false,
+      fever: [],
+      feverDays: document.getElementById('feverDays').value,
+      phlegmColor: '',
+      symptoms: { ent: [], gi: [], chronic: [], other: [] },
+      entDays: document.getElementById('entDays').value,
+      entMedicated: document.getElementById('entMedicated').value,
+      entMedDetail: document.getElementById('entMedText').value.trim(),
+      giDays: document.getElementById('giDays').value,
+      giMedicated: document.getElementById('giMedicated').value,
+      giMedDetail: document.getElementById('giMedText').value.trim(),
+      chronicOther: document.getElementById('chronicOtherText').value.trim(),
+      vaccine: document.getElementById('vaccineText').value.trim(),
+      otherNotes: document.getElementById('otherNotes').value.trim(),
+    };
+
+    document.querySelectorAll('.opt-btn[data-group="docs"].selected').forEach(b => {
+      data.docs.push(b.dataset.value);
+    });
+    const medSel = document.querySelector('.opt-btn[data-radio="medForm"].selected');
+    if (medSel) data.medPreference = medSel.dataset.value;
+    const allergySel = document.querySelector('.opt-btn[data-radio="allergy"].selected');
+    if (allergySel && allergySel.dataset.value === '是') {
+      data.allergy.hasAllergy = true;
+      data.allergy.detail = document.getElementById('allergyText').value.trim();
+    }
+    data.pregnancy = document.getElementById('pregnancyBtn').classList.contains('selected-amber');
+
+    // Fever chips
+    document.querySelectorAll('.chips[data-category="fever"] .chip.selected').forEach(chip => {
+      data.fever.push(chip.textContent.replace(/^✓\s*/, '').trim());
+    });
+
+    // Phlegm color
+    const phlegmSel = document.querySelector('.opt-btn[data-radio="phlegm"].selected');
+    if (phlegmSel) data.phlegmColor = phlegmSel.dataset.value;
+
+    document.querySelectorAll('.chips').forEach(container => {
+      const cat = container.dataset.category;
+      container.querySelectorAll('.chip.selected').forEach(chip => {
+        const text = chip.textContent.replace(/^✓\s*/, '').trim();
+        if (cat && data.symptoms[cat] !== undefined) {
+          data.symptoms[cat].push(text);
+        }
+      });
+    });
+
+    return data;
+  }
+
+  // ── Submit ──
+  document.getElementById('submitBtn').addEventListener('click', async () => {
+    const data = collectData();
+
+    if (!data.name) {
+      const nameInput = document.getElementById('name');
+      nameInput.style.borderColor = 'var(--rose-500)';
+      nameInput.focus();
+      nameInput.setAttribute('placeholder', '⚠ 請輸入姓名');
+      return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+
+    // 如果有設定 Apps Script URL，送到 Google Sheets
+    if (APPS_SCRIPT_URL) {
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>送出中...';
+
+      try {
+        // 將資料攤平成 Google Sheets 友好格式
+        const flat = {
+          timestamp: data.timestamp,
+          date: data.date,
+          clinic: data.clinic,
+          name: data.name,
+          patientId: data.patientId,
+          weight: data.weight,
+          docs: data.docs.join('、'),
+          medPreference: data.medPreference,
+          allergy: data.allergy.hasAllergy ? '是：' + data.allergy.detail : '否',
+          pregnancy: data.pregnancy ? '是' : '否',
+          fever: data.fever.length > 0 ? data.fever.join('、') : '',
+          feverDays: data.feverDays,
+          ent: data.symptoms.ent.join('、') + (data.phlegmColor ? '（痰色：' + data.phlegmColor + '）' : ''),
+          entDays: data.entDays,
+          entMedicated: data.entMedicated === '是' ? '是：' + data.entMedDetail : data.entMedicated,
+          gi: data.symptoms.gi.join('、'),
+          giDays: data.giDays,
+          giMedicated: data.giMedicated === '是' ? '是：' + data.giMedDetail : data.giMedicated,
+          chronic: data.symptoms.chronic.join('、') + (data.chronicOther ? '（' + data.chronicOther + '）' : ''),
+          other: data.symptoms.other.join('、') + (data.vaccine ? '（疫苗：' + data.vaccine + '）' : ''),
+          otherNotes: data.otherNotes,
+        };
+
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify(flat),
+        });
+      } catch (e) {
+        console.error('送出失敗:', e);
+      }
+    } else {
+      console.log('表單資料:', JSON.stringify(data, null, 2));
+    }
+
+    // 顯示感謝頁
+    document.getElementById('formContainer').classList.add('hidden');
+    document.getElementById('thankYou').classList.add('show');
+    document.getElementById('tyName').textContent = `${data.name} 您好`;
+  });
+
+  // Reset name style
+  document.getElementById('name').addEventListener('input', function() {
+    this.style.borderColor = '';
+    this.setAttribute('placeholder', '請輸入姓名');
+  });
+
+})();
+
+// ── 用藥詳情展開（需為全域函式供 onchange 呼叫）──
+function toggleMedDetail(prefix) {
+  const sel = document.getElementById(prefix + 'Medicated');
+  const detail = document.getElementById(prefix + 'MedDetail');
+  if (sel.value === '是') {
+    detail.classList.add('show');
+    detail.querySelector('input')?.focus();
+  } else {
+    detail.classList.remove('show');
+    detail.querySelector('input').value = '';
+  }
+}
+</script>
+</body>
+</html>
