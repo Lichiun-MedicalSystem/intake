@@ -504,6 +504,81 @@
     color: var(--teal-700);
   }
 
+  /* ─── Screening Info ─── */
+  .screening-card {
+    width: 100%;
+    max-width: 400px;
+    margin-top: 28px;
+    background: var(--slate-50);
+    border-radius: 16px;
+    padding: 20px 18px;
+    text-align: left;
+    border: 1.5px solid var(--slate-200);
+  }
+  .screening-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--teal-800);
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--teal-50);
+  }
+  .screening-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .screening-table th {
+    background: var(--teal-600);
+    color: var(--white);
+    padding: 8px 6px;
+    font-weight: 500;
+    font-size: 12px;
+    text-align: center;
+  }
+  .screening-table th:first-child { border-radius: 8px 0 0 0; }
+  .screening-table th:last-child { border-radius: 0 8px 0 0; }
+  .screening-table td {
+    padding: 7px 6px;
+    border-bottom: 1px solid var(--slate-200);
+    color: var(--slate-700);
+    font-size: 12.5px;
+    line-height: 1.4;
+    vertical-align: top;
+  }
+  .screening-table tr:last-child td { border-bottom: none; }
+  .screening-table tr:nth-child(even) td { background: var(--white); }
+  .screening-cta {
+    margin-top: 14px;
+    padding: 10px 14px;
+    background: linear-gradient(135deg, var(--teal-50), var(--amber-50));
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--teal-800);
+    text-align: center;
+    line-height: 1.5;
+  }
+  .screening-next-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 32px;
+    background: var(--teal-600);
+    color: var(--white);
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .screening-next-btn:active { transform: scale(0.97); }
+
   /* ─── Footer ─── */
   .footer {
     text-align: center;
@@ -787,7 +862,26 @@
   <div class="ty-title">表單已送出</div>
   <div class="ty-msg">感謝您的填寫！<br>醫師將於看診前參閱您的資訊</div>
   <div class="ty-name" id="tyName"></div>
-  <div class="footer" style="margin-top: 40px;">立群醫療體系 &copy; 2026</div>
+
+  <div class="screening-card">
+    <div class="screening-title">🏥 免費健康篩檢資訊</div>
+    <table class="screening-table">
+      <tr><th>篩檢項目</th><th>適用對象</th><th>頻率</th></tr>
+      <tr><td>成人預防保健</td><td>30–39 歲</td><td>每 5 年</td></tr>
+      <tr><td>成人預防保健</td><td>40–64 歲</td><td>每 3 年</td></tr>
+      <tr><td>成人預防保健</td><td>≥65 歲</td><td>每年</td></tr>
+      <tr><td>B、C 型肝炎</td><td>1986 年前出生</td><td>終身 1 次</td></tr>
+      <tr><td>大腸癌篩檢</td><td>45–74 歲</td><td>每 2 年</td></tr>
+      <tr><td>口腔癌篩檢</td><td>30 歲以上（嚼檳榔/吸菸）</td><td>每 2 年</td></tr>
+      <tr><td>胃癌篩檢</td><td>45–74 歲</td><td>終身 1 次</td></tr>
+    </table>
+    <div class="screening-cta">
+      📋 如您符合以上資格，歡迎洽詢櫃台人員安排篩檢
+    </div>
+  </div>
+
+  <button class="screening-next-btn" onclick="location.reload()">📝 填寫下一位</button>
+  <div class="footer" style="margin-top: 24px;">立群醫療體系 &copy; 2026</div>
 </div>
 
 <script>
