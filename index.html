@@ -598,7 +598,7 @@
   <div class="header">
     <img src="logo.png" alt="立群" class="logo-img">
     <h1>立群醫療體系 問診表單</h1>
-    <p class="subtitle">請填寫以下資訊，協助醫師了解您的需求</p>
+    <p class="subtitle" id="branchSubtitle">請填寫以下資訊，協助醫師了解您的需求</p>
     <div class="datetime" id="datetime"></div>
   </div>
 
@@ -908,6 +908,13 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyVFakl4ORVX2mF
   updateDateTime();
   setInterval(updateDateTime, 30000);
 
+  // ── 院區參數（?branch=本院）──
+  const urlParams = new URLSearchParams(window.location.search);
+  const BRANCH = urlParams.get('branch') || '';
+  if (BRANCH) {
+    document.getElementById('branchSubtitle').textContent = `${BRANCH} — 請填寫以下資訊，協助醫師了解您的需求`;
+  }
+
   // ── 追蹤各類已選症狀數量，控制 followup 顯示 ──
   function updateFollowup(category) {
     const container = document.querySelector(`.chips[data-category="${category}"]`);
@@ -981,6 +988,7 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyVFakl4ORVX2mF
     const data = {
       timestamp: new Date().toISOString(),
       date: document.getElementById('datetime').textContent,
+      branch: BRANCH,
       clinic: document.getElementById('clinic').value,
       name: document.getElementById('name').value.trim(),
       patientId: document.getElementById('patientId').value.trim(),
@@ -1062,6 +1070,7 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyVFakl4ORVX2mF
         const flat = {
           timestamp: data.timestamp,
           date: data.date,
+          branch: data.branch,
           clinic: data.clinic,
           name: data.name,
           patientId: data.patientId,
