@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>立群醫療體系 — 問診表單</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Noto+Sans+Thai:wght@300;400;500;700&display=swap');
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
@@ -589,6 +589,33 @@
   }
 
   .form-container.hidden { display: none; }
+
+  /* ─── Language Selector ─── */
+  .lang-selector {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .lang-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.8);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Noto Sans TC', 'Noto Sans Thai', sans-serif;
+  }
+  .lang-btn:hover { background: rgba(255,255,255,0.25); }
+  .lang-btn.selected {
+    background: var(--white);
+    color: var(--teal-700);
+    font-weight: 600;
+    border-color: var(--white);
+  }
 </style>
 </head>
 <body>
@@ -597,9 +624,17 @@
 <div class="form-container" id="formContainer">
   <div class="header">
     <img src="logo.png" alt="立群" class="logo-img">
-    <h1>立群醫療體系 問診表單</h1>
-    <p class="subtitle" id="branchSubtitle">請填寫以下資訊，協助醫師了解您的需求</p>
+    <h1 data-i18n="pageTitle">立群醫療體系 問診表單</h1>
+    <p class="subtitle" id="branchSubtitle" data-i18n="subtitle">請填寫以下資訊，協助醫師了解您的需求</p>
     <div class="datetime" id="datetime"></div>
+    <!-- 語言選擇器 -->
+    <div class="lang-selector" id="langSelector">
+      <button class="lang-btn selected" data-lang="zh-Hant">繁體中文</button>
+      <button class="lang-btn" data-lang="en">English</button>
+      <button class="lang-btn" data-lang="vi">Tiếng Việt</button>
+      <button class="lang-btn" data-lang="th">ภาษาไทย</button>
+      <button class="lang-btn" data-lang="id">Bahasa Indonesia</button>
+    </div>
   </div>
 
   <div class="form-wrap">
@@ -607,30 +642,30 @@
     <!-- ── 基本資料 ── -->
     <div class="section">
       <div class="section-title">
-        <span class="section-icon">📋</span> 基本資料
+        <span class="section-icon">📋</span> <span data-i18n="sectionBasic">基本資料</span>
       </div>
       <div class="field-row">
         <div class="field">
-          <label>診間</label>
+          <label data-i18n="labelClinic">診間</label>
           <select id="clinic">
-            <option value="">請選擇</option>
-            <option value="一診">一診</option>
-            <option value="二診">二診</option>
-            <option value="三診">三診</option>
+            <option value="" data-i18n="optSelect">請選擇</option>
+            <option value="一診" data-i18n="optClinic1">一診</option>
+            <option value="二診" data-i18n="optClinic2">二診</option>
+            <option value="三診" data-i18n="optClinic3">三診</option>
           </select>
         </div>
         <div class="field">
-          <label>診號 <span class="optional">(選填)</span></label>
-          <input type="text" id="patientId" placeholder="如有診號請填寫">
+          <label><span data-i18n="labelPatientId">診號</span> <span class="optional" data-i18n="optionalTag">(選填)</span></label>
+          <input type="text" id="patientId" data-i18n-ph="phPatientId" placeholder="如有診號請填寫">
         </div>
       </div>
       <div class="field-row">
         <div class="field">
-          <label>姓名</label>
-          <input type="text" id="name" placeholder="請輸入姓名">
+          <label data-i18n="labelName">姓名</label>
+          <input type="text" id="name" data-i18n-ph="phName" placeholder="請輸入姓名">
         </div>
         <div class="field field-sm">
-          <label>體重 <span class="optional">(公斤)</span></label>
+          <label><span data-i18n="labelWeight">體重</span> <span class="optional" data-i18n="weightUnit">(公斤)</span></label>
           <input type="number" id="weight" placeholder="kg">
         </div>
       </div>
@@ -639,36 +674,36 @@
     <!-- ── 特殊需求 ── -->
     <div class="section">
       <div class="section-title">
-        <span class="section-icon">📌</span> 特殊需求
+        <span class="section-icon">📌</span> <span data-i18n="sectionSpecial">特殊需求</span>
       </div>
       <div class="option-group">
-        <div class="option-label">需要文件</div>
+        <div class="option-label" data-i18n="labelDocs">需要文件</div>
         <div class="option-row">
-          <div class="opt-btn" data-group="docs" data-value="診斷證明書">📄 診斷證明書</div>
-          <div class="opt-btn" data-group="docs" data-value="就醫證明">📄 就醫證明</div>
+          <div class="opt-btn" data-group="docs" data-value="診斷證明書" data-i18n="optDiagnosis">📄 診斷證明書</div>
+          <div class="opt-btn" data-group="docs" data-value="就醫證明" data-i18n="optMedCert">📄 就醫證明</div>
         </div>
       </div>
       <div class="option-group">
-        <div class="option-label">藥物偏好</div>
+        <div class="option-label" data-i18n="labelMedPref">藥物偏好</div>
         <div class="option-row">
-          <div class="opt-btn" data-group="medForm" data-value="藥丸" data-radio="medForm">💊 藥丸</div>
-          <div class="opt-btn" data-group="medForm" data-value="藥粉" data-radio="medForm">🧂 藥粉</div>
+          <div class="opt-btn" data-group="medForm" data-value="藥丸" data-radio="medForm" data-i18n="optPill">💊 藥丸</div>
+          <div class="opt-btn" data-group="medForm" data-value="藥粉" data-radio="medForm" data-i18n="optPowder">🧂 藥粉</div>
         </div>
       </div>
       <div class="option-group">
-        <div class="option-label">藥物過敏</div>
+        <div class="option-label" data-i18n="labelAllergy">藥物過敏</div>
         <div class="option-row">
-          <div class="opt-btn" data-group="allergy" data-value="否" data-radio="allergy" id="allergyNo">否</div>
-          <div class="opt-btn" data-group="allergy" data-value="是" data-radio="allergy" id="allergyYes">⚠️ 是</div>
+          <div class="opt-btn" data-group="allergy" data-value="否" data-radio="allergy" id="allergyNo" data-i18n="optNo">否</div>
+          <div class="opt-btn" data-group="allergy" data-value="是" data-radio="allergy" id="allergyYes" data-i18n="optAllergyYes">⚠️ 是</div>
         </div>
         <div class="allergy-detail" id="allergyDetail">
-          <input type="text" id="allergyText" placeholder="請說明過敏藥物名稱">
+          <input type="text" id="allergyText" data-i18n-ph="phAllergy" placeholder="請說明過敏藥物名稱">
         </div>
       </div>
       <div class="option-group">
-        <div class="option-label">其他</div>
+        <div class="option-label" data-i18n="labelOther">其他</div>
         <div class="option-row">
-          <div class="opt-btn" data-group="pregnancy" data-value="懷孕" id="pregnancyBtn">🤰 懷孕</div>
+          <div class="opt-btn" data-group="pregnancy" data-value="懷孕" id="pregnancyBtn" data-i18n="optPregnancy">🤰 懷孕</div>
         </div>
       </div>
     </div>
@@ -676,29 +711,29 @@
     <!-- ── 症狀 ── -->
     <div class="section">
       <div class="section-title">
-        <span class="section-icon">🩺</span> 請勾選您的症狀
+        <span class="section-icon">🩺</span> <span data-i18n="sectionSymptoms">請勾選您的症狀</span>
       </div>
 
       <!-- 發燒（獨立） -->
       <div class="symptom-group">
-        <div class="symptom-cat"><span class="cat-icon">🌡️</span> 發燒 / 畏寒</div>
+        <div class="symptom-cat"><span class="cat-icon">🌡️</span> <span data-i18n="catFever">發燒 / 畏寒</span></div>
         <div class="chips" data-category="fever">
-          <div class="chip">發燒</div>
-          <div class="chip">畏寒</div>
-          <div class="chip">忽冷忽熱</div>
+          <div class="chip" data-value="發燒" data-i18n="chipFever">發燒</div>
+          <div class="chip" data-value="畏寒" data-i18n="chipChills">畏寒</div>
+          <div class="chip" data-value="忽冷忽熱" data-i18n="chipAlternating">忽冷忽熱</div>
         </div>
         <div class="followup-panel" id="feverFollowup">
           <div class="followup-inner">
             <div class="field">
-              <label>持續幾天？</label>
+              <label data-i18n="labelDuration">持續幾天？</label>
               <select id="feverDays">
-                <option value="">請選擇</option>
-                <option value="今天開始">今天開始</option>
-                <option value="1天">1 天</option>
-                <option value="2-3天">2-3 天</option>
-                <option value="4-6天">4-6 天</option>
-                <option value="一週">約一週</option>
-                <option value="一週以上">一週以上</option>
+                <option value="" data-i18n="optSelect">請選擇</option>
+                <option value="今天開始" data-i18n="durToday">今天開始</option>
+                <option value="1天" data-i18n="dur1day">1 天</option>
+                <option value="2-3天" data-i18n="dur23days">2-3 天</option>
+                <option value="4-6天" data-i18n="dur46days">4-6 天</option>
+                <option value="一週" data-i18n="dur1week">約一週</option>
+                <option value="一週以上" data-i18n="durOver1week">一週以上</option>
               </select>
             </div>
           </div>
@@ -707,133 +742,133 @@
 
       <!-- 耳鼻喉 -->
       <div class="symptom-group">
-        <div class="symptom-cat"><span class="cat-icon">👂</span> 耳鼻喉</div>
+        <div class="symptom-cat"><span class="cat-icon">👂</span> <span data-i18n="catENT">耳鼻喉</span></div>
         <div class="chips" data-category="ent">
-          <div class="chip">咳嗽</div>
-          <div class="chip" data-expand="phlegmColor">有痰</div>
-          <div class="chip">流鼻水</div>
-          <div class="chip">鼻涕</div>
-          <div class="chip">鼻塞</div>
-          <div class="chip">喉嚨痛</div>
-          <div class="chip">喉嚨卡</div>
-          <div class="chip">打噴嚏</div>
-          <div class="chip">耳痛</div>
-          <div class="chip">頭暈</div>
-          <div class="chip">流鼻血</div>
+          <div class="chip" data-value="咳嗽" data-i18n="chipCough">咳嗽</div>
+          <div class="chip" data-value="有痰" data-expand="phlegmColor" data-i18n="chipSputum">有痰</div>
+          <div class="chip" data-value="流鼻水" data-i18n="chipRunnyNose">流鼻水</div>
+          <div class="chip" data-value="鼻涕" data-i18n="chipNasalDischarge">鼻涕</div>
+          <div class="chip" data-value="鼻塞" data-i18n="chipCongestion">鼻塞</div>
+          <div class="chip" data-value="喉嚨痛" data-i18n="chipSoreThroat">喉嚨痛</div>
+          <div class="chip" data-value="喉嚨卡" data-i18n="chipThroatTight">喉嚨卡</div>
+          <div class="chip" data-value="打噴嚏" data-i18n="chipSneezing">打噴嚏</div>
+          <div class="chip" data-value="耳痛" data-i18n="chipEarPain">耳痛</div>
+          <div class="chip" data-value="頭暈" data-i18n="chipDizziness">頭暈</div>
+          <div class="chip" data-value="流鼻血" data-i18n="chipEpistaxis">流鼻血</div>
         </div>
         <div class="chip-expand" id="phlegmColor">
-          <div style="font-size:12px;color:var(--slate-500);margin-bottom:5px;">痰的顏色</div>
+          <div style="font-size:12px;color:var(--slate-500);margin-bottom:5px;" data-i18n="labelPhlegmColor">痰的顏色</div>
           <div class="option-row">
-            <div class="opt-btn" data-group="phlegm" data-value="透明" data-radio="phlegm" style="padding:6px 10px;font-size:13px;">透明</div>
-            <div class="opt-btn" data-group="phlegm" data-value="白" data-radio="phlegm" style="padding:6px 10px;font-size:13px;">白</div>
-            <div class="opt-btn" data-group="phlegm" data-value="黃" data-radio="phlegm" style="padding:6px 10px;font-size:13px;">黃</div>
-            <div class="opt-btn" data-group="phlegm" data-value="綠" data-radio="phlegm" style="padding:6px 10px;font-size:13px;">綠</div>
-            <div class="opt-btn" data-group="phlegm" data-value="褐色" data-radio="phlegm" style="padding:6px 10px;font-size:13px;">褐色</div>
-            <div class="opt-btn" data-group="phlegm" data-value="血色" data-radio="phlegm" style="padding:6px 10px;font-size:13px;">血色</div>
+            <div class="opt-btn" data-group="phlegm" data-value="透明" data-radio="phlegm" style="padding:6px 10px;font-size:13px;" data-i18n="phlegmClear">透明</div>
+            <div class="opt-btn" data-group="phlegm" data-value="白" data-radio="phlegm" style="padding:6px 10px;font-size:13px;" data-i18n="phlegmWhite">白</div>
+            <div class="opt-btn" data-group="phlegm" data-value="黃" data-radio="phlegm" style="padding:6px 10px;font-size:13px;" data-i18n="phlegmYellow">黃</div>
+            <div class="opt-btn" data-group="phlegm" data-value="綠" data-radio="phlegm" style="padding:6px 10px;font-size:13px;" data-i18n="phlegmGreen">綠</div>
+            <div class="opt-btn" data-group="phlegm" data-value="褐色" data-radio="phlegm" style="padding:6px 10px;font-size:13px;" data-i18n="phlegmBrown">褐色</div>
+            <div class="opt-btn" data-group="phlegm" data-value="血色" data-radio="phlegm" style="padding:6px 10px;font-size:13px;" data-i18n="phlegmBloody">血色</div>
           </div>
         </div>
         <div class="followup-panel" id="entFollowup">
           <div class="followup-inner">
             <div class="field">
-              <label>持續幾天？</label>
+              <label data-i18n="labelDuration">持續幾天？</label>
               <select id="entDays">
-                <option value="">請選擇</option>
-                <option value="1天">1 天</option>
-                <option value="2-3天">2-3 天</option>
-                <option value="4-6天">4-6 天</option>
-                <option value="一週">約一週</option>
-                <option value="一週以上">一週以上</option>
+                <option value="" data-i18n="optSelect">請選擇</option>
+                <option value="1天" data-i18n="dur1day">1 天</option>
+                <option value="2-3天" data-i18n="dur23days">2-3 天</option>
+                <option value="4-6天" data-i18n="dur46days">4-6 天</option>
+                <option value="一週" data-i18n="dur1week">約一週</option>
+                <option value="一週以上" data-i18n="durOver1week">一週以上</option>
               </select>
             </div>
             <div class="field">
-              <label>是否曾用藥？</label>
+              <label data-i18n="labelMedicated">是否曾用藥？</label>
               <select id="entMedicated" onchange="toggleMedDetail('ent')">
-                <option value="">請選擇</option>
-                <option value="否">否</option>
-                <option value="是">是</option>
+                <option value="" data-i18n="optSelect">請選擇</option>
+                <option value="否" data-i18n="optNo">否</option>
+                <option value="是" data-i18n="optYes">是</option>
               </select>
             </div>
           </div>
           <div class="medicated-detail" id="entMedDetail">
-            <input type="text" id="entMedText" placeholder="用過什麼藥？（如：感冒藥、診所開的藥等）">
+            <input type="text" id="entMedText" data-i18n-ph="phEntMed" placeholder="用過什麼藥？（如：感冒藥、診所開的藥等）">
           </div>
         </div>
       </div>
 
       <!-- 腸胃 -->
       <div class="symptom-group">
-        <div class="symptom-cat"><span class="cat-icon">🫄</span> 腸胃</div>
+        <div class="symptom-cat"><span class="cat-icon">🫄</span> <span data-i18n="catGI">腸胃</span></div>
         <div class="chips" data-category="gi">
-          <div class="chip">腹痛</div>
-          <div class="chip">噁心</div>
-          <div class="chip">想吐</div>
-          <div class="chip">拉肚子</div>
-          <div class="chip">嘔吐</div>
-          <div class="chip">便祕</div>
-          <div class="chip">黑便</div>
-          <div class="chip">血便</div>
-          <div class="chip">痔瘡</div>
+          <div class="chip" data-value="腹痛" data-i18n="chipAbdPain">腹痛</div>
+          <div class="chip" data-value="噁心" data-i18n="chipNausea">噁心</div>
+          <div class="chip" data-value="想吐" data-i18n="chipVomitSense">想吐</div>
+          <div class="chip" data-value="拉肚子" data-i18n="chipDiarrhea">拉肚子</div>
+          <div class="chip" data-value="嘔吐" data-i18n="chipVomiting">嘔吐</div>
+          <div class="chip" data-value="便祕" data-i18n="chipConstipation">便祕</div>
+          <div class="chip" data-value="黑便" data-i18n="chipMelena">黑便</div>
+          <div class="chip" data-value="血便" data-i18n="chipHematochezia">血便</div>
+          <div class="chip" data-value="痔瘡" data-i18n="chipHemorrhoids">痔瘡</div>
         </div>
         <div class="followup-panel" id="giFollowup">
           <div class="followup-inner">
             <div class="field">
-              <label>持續幾天？</label>
+              <label data-i18n="labelDuration">持續幾天？</label>
               <select id="giDays">
-                <option value="">請選擇</option>
-                <option value="1天">1 天</option>
-                <option value="2-3天">2-3 天</option>
-                <option value="4-6天">4-6 天</option>
-                <option value="一週">約一週</option>
-                <option value="一週以上">一週以上</option>
+                <option value="" data-i18n="optSelect">請選擇</option>
+                <option value="1天" data-i18n="dur1day">1 天</option>
+                <option value="2-3天" data-i18n="dur23days">2-3 天</option>
+                <option value="4-6天" data-i18n="dur46days">4-6 天</option>
+                <option value="一週" data-i18n="dur1week">約一週</option>
+                <option value="一週以上" data-i18n="durOver1week">一週以上</option>
               </select>
             </div>
             <div class="field">
-              <label>是否曾用藥？</label>
+              <label data-i18n="labelMedicated">是否曾用藥？</label>
               <select id="giMedicated" onchange="toggleMedDetail('gi')">
-                <option value="">請選擇</option>
-                <option value="否">否</option>
-                <option value="是">是</option>
+                <option value="" data-i18n="optSelect">請選擇</option>
+                <option value="否" data-i18n="optNo">否</option>
+                <option value="是" data-i18n="optYes">是</option>
               </select>
             </div>
           </div>
           <div class="medicated-detail" id="giMedDetail">
-            <input type="text" id="giMedText" placeholder="用過什麼藥？（如：胃藥、止瀉藥等）">
+            <input type="text" id="giMedText" data-i18n-ph="phGiMed" placeholder="用過什麼藥？（如：胃藥、止瀉藥等）">
           </div>
         </div>
       </div>
 
       <!-- 慢性病 -->
       <div class="symptom-group">
-        <div class="symptom-cat"><span class="cat-icon">💗</span> 慢性病</div>
+        <div class="symptom-cat"><span class="cat-icon">💗</span> <span data-i18n="catChronic">慢性病</span></div>
         <div class="chips" data-category="chronic">
-          <div class="chip">高血壓</div>
-          <div class="chip">糖尿病</div>
-          <div class="chip">高血脂</div>
-          <div class="chip">痛風</div>
-          <div class="chip">甲狀腺</div>
-          <div class="chip" data-expand="chronicOther">其他</div>
+          <div class="chip" data-value="高血壓" data-i18n="chipHypertension">高血壓</div>
+          <div class="chip" data-value="糖尿病" data-i18n="chipDiabetes">糖尿病</div>
+          <div class="chip" data-value="高血脂" data-i18n="chipHyperlipidemia">高血脂</div>
+          <div class="chip" data-value="痛風" data-i18n="chipGout">痛風</div>
+          <div class="chip" data-value="甲狀腺" data-i18n="chipThyroid">甲狀腺</div>
+          <div class="chip" data-value="其他" data-expand="chronicOther" data-i18n="chipOther">其他</div>
         </div>
         <div class="chip-expand" id="chronicOther">
-          <input type="text" id="chronicOtherText" placeholder="請說明其他慢性病">
+          <input type="text" id="chronicOtherText" data-i18n-ph="phChronicOther" placeholder="請說明其他慢性病">
         </div>
       </div>
 
       <!-- 其他需求 -->
       <div class="symptom-group">
-        <div class="symptom-cat"><span class="cat-icon">🏥</span> 其他需求</div>
+        <div class="symptom-cat"><span class="cat-icon">🏥</span> <span data-i18n="catOtherReq">其他需求</span></div>
         <div class="chips" data-category="other">
-          <div class="chip">健檢/抽血</div>
-          <div class="chip">減重</div>
-          <div class="chip">皮膚問題</div>
-          <div class="chip">失眠</div>
-          <div class="chip">旅遊諮詢</div>
-          <div class="chip">戒菸</div>
-          <div class="chip">想開慢性處方籤</div>
-          <div class="chip">自律神經失調</div>
-          <div class="chip" data-expand="vaccineDetail">疫苗</div>
+          <div class="chip" data-value="健檢/抽血" data-i18n="chipCheckup">健檢/抽血</div>
+          <div class="chip" data-value="減重" data-i18n="chipWeightLoss">減重</div>
+          <div class="chip" data-value="皮膚問題" data-i18n="chipSkin">皮膚問題</div>
+          <div class="chip" data-value="失眠" data-i18n="chipInsomnia">失眠</div>
+          <div class="chip" data-value="旅遊諮詢" data-i18n="chipTravel">旅遊諮詢</div>
+          <div class="chip" data-value="戒菸" data-i18n="chipQuitSmoking">戒菸</div>
+          <div class="chip" data-value="想開慢性處方籤" data-i18n="chipChronicRx">想開慢性處方籤</div>
+          <div class="chip" data-value="自律神經失調" data-i18n="chipAutonomic">自律神經失調</div>
+          <div class="chip" data-value="疫苗" data-expand="vaccineDetail" data-i18n="chipVaccine">疫苗</div>
         </div>
         <div class="chip-expand" id="vaccineDetail">
-          <input type="text" id="vaccineText" placeholder="請說明疫苗種類">
+          <input type="text" id="vaccineText" data-i18n-ph="phVaccine" placeholder="請說明疫苗種類">
         </div>
       </div>
     </div>
@@ -841,32 +876,32 @@
     <!-- ── 其他問題 ── -->
     <div class="section">
       <div class="section-title">
-        <span class="section-icon">💬</span> 其他問題
+        <span class="section-icon">💬</span> <span data-i18n="sectionOtherQ">其他問題</span>
       </div>
       <div class="field">
-        <textarea id="otherNotes" placeholder="如有其他想告訴醫師的事項，請在此填寫"></textarea>
+        <textarea id="otherNotes" data-i18n-ph="phOtherNotes" placeholder="如有其他想告訴醫師的事項，請在此填寫"></textarea>
       </div>
     </div>
   </div>
 
   <div class="submit-wrap">
-    <button class="submit-btn" id="submitBtn">送 出 表 單</button>
+    <button class="submit-btn" id="submitBtn" data-i18n="btnSubmit">送 出 表 單</button>
   </div>
 
-  <div class="footer">立群醫療體系 &copy; 2026 — 您的資料僅供本次看診使用</div>
+  <div class="footer" data-i18n="footer">立群醫療體系 &copy; 2026 — 您的資料僅供本次看診使用</div>
 </div>
 
 <!-- ═══ Thank You ═══ -->
 <div class="thank-you" id="thankYou">
   <div class="ty-check">✓</div>
-  <div class="ty-title">表單已送出</div>
-  <div class="ty-msg">感謝您的填寫！<br>醫師將於看診前參閱您的資訊</div>
+  <div class="ty-title" data-i18n="tyTitle">表單已送出</div>
+  <div class="ty-msg" data-i18n="tyMsg">感謝您的填寫！<br>醫師將於看診前參閱您的資訊</div>
   <div class="ty-name" id="tyName"></div>
 
   <div class="screening-card">
-    <div class="screening-title">🏥 免費健康篩檢資訊</div>
+    <div class="screening-title" data-i18n="screeningTitle">🏥 免費健康篩檢資訊</div>
     <table class="screening-table">
-      <tr><th>篩檢項目</th><th>適用對象</th><th>頻率</th></tr>
+      <tr><th data-i18n="thItem">篩檢項目</th><th data-i18n="thTarget">適用對象</th><th data-i18n="thFreq">頻率</th></tr>
       <tr><td>成人預防保健</td><td>30–39 歲</td><td>每 5 年</td></tr>
       <tr><td>成人預防保健</td><td>40–64 歲</td><td>每 3 年</td></tr>
       <tr><td>成人預防保健</td><td>≥65 歲</td><td>每年</td></tr>
@@ -875,12 +910,12 @@
       <tr><td>口腔癌篩檢</td><td>30 歲以上（嚼檳榔/吸菸）</td><td>每 2 年</td></tr>
       <tr><td>胃癌篩檢</td><td>45–74 歲</td><td>終身 1 次</td></tr>
     </table>
-    <div class="screening-cta">
+    <div class="screening-cta" data-i18n="screeningCTA">
       📋 如您符合以上資格，歡迎洽詢櫃台人員安排篩檢
     </div>
   </div>
 
-  <button class="screening-next-btn" onclick="location.reload()">📝 填寫下一位</button>
+  <button class="screening-next-btn" onclick="location.reload()" data-i18n="btnNext">📝 填寫下一位</button>
   <div class="footer" style="margin-top: 24px;">立群醫療體系 &copy; 2026</div>
 </div>
 
@@ -890,6 +925,187 @@
 //  部署後將網址填入此處即可串接 Google Sheets
 // ══════════════════════════════════════════════════════
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyVFakl4ORVX2mFFgC4h_a694Ow8jBvfTFDQQWuxxi5uxSWM5Q4FMU2TvGUqv4x59Q/exec';
+
+// ══════════════════════════════════════════════════════
+//  多語言翻譯字典
+// ══════════════════════════════════════════════════════
+const TRANSLATIONS = {
+'zh-Hant': {
+  pageTitle:'立群醫療體系 問診表單', subtitle:'請填寫以下資訊，協助醫師了解您的需求',
+  sectionBasic:'基本資料', sectionSpecial:'特殊需求', sectionSymptoms:'請勾選您的症狀', sectionOtherQ:'其他問題',
+  labelClinic:'診間', labelPatientId:'診號', labelName:'姓名', labelWeight:'體重',
+  optionalTag:'(選填)', weightUnit:'(公斤)', optSelect:'請選擇',
+  optClinic1:'一診', optClinic2:'二診', optClinic3:'三診',
+  phPatientId:'如有診號請填寫', phName:'請輸入姓名',
+  labelDocs:'需要文件', optDiagnosis:'📄 診斷證明書', optMedCert:'📄 就醫證明',
+  labelMedPref:'藥物偏好', optPill:'💊 藥丸', optPowder:'🧂 藥粉',
+  labelAllergy:'藥物過敏', optNo:'否', optAllergyYes:'⚠️ 是', optYes:'是',
+  phAllergy:'請說明過敏藥物名稱',
+  labelOther:'其他', optPregnancy:'🤰 懷孕',
+  catFever:'發燒 / 畏寒', chipFever:'發燒', chipChills:'畏寒', chipAlternating:'忽冷忽熱',
+  labelDuration:'持續幾天？', durToday:'今天開始', dur1day:'1 天', dur23days:'2-3 天', dur46days:'4-6 天', dur1week:'約一週', durOver1week:'一週以上',
+  catENT:'耳鼻喉', chipCough:'咳嗽', chipSputum:'有痰', chipRunnyNose:'流鼻水', chipNasalDischarge:'鼻涕', chipCongestion:'鼻塞', chipSoreThroat:'喉嚨痛', chipThroatTight:'喉嚨卡', chipSneezing:'打噴嚏', chipEarPain:'耳痛', chipDizziness:'頭暈', chipEpistaxis:'流鼻血',
+  labelPhlegmColor:'痰的顏色', phlegmClear:'透明', phlegmWhite:'白', phlegmYellow:'黃', phlegmGreen:'綠', phlegmBrown:'褐色', phlegmBloody:'血色',
+  labelMedicated:'是否曾用藥？', phEntMed:'用過什麼藥？（如：感冒藥、診所開的藥等）',
+  catGI:'腸胃', chipAbdPain:'腹痛', chipNausea:'噁心', chipVomitSense:'想吐', chipDiarrhea:'拉肚子', chipVomiting:'嘔吐', chipConstipation:'便祕', chipMelena:'黑便', chipHematochezia:'血便', chipHemorrhoids:'痔瘡',
+  phGiMed:'用過什麼藥？（如：胃藥、止瀉藥等）',
+  catChronic:'慢性病', chipHypertension:'高血壓', chipDiabetes:'糖尿病', chipHyperlipidemia:'高血脂', chipGout:'痛風', chipThyroid:'甲狀腺', chipOther:'其他', phChronicOther:'請說明其他慢性病',
+  catOtherReq:'其他需求', chipCheckup:'健檢/抽血', chipWeightLoss:'減重', chipSkin:'皮膚問題', chipInsomnia:'失眠', chipTravel:'旅遊諮詢', chipQuitSmoking:'戒菸', chipChronicRx:'想開慢性處方籤', chipAutonomic:'自律神經失調', chipVaccine:'疫苗', phVaccine:'請說明疫苗種類',
+  phOtherNotes:'如有其他想告訴醫師的事項，請在此填寫',
+  btnSubmit:'送 出 表 單', btnSubmitting:'送出中...',
+  footer:'立群醫療體系 © 2026 — 您的資料僅供本次看診使用',
+  tyTitle:'表單已送出', tyMsg:'感謝您的填寫！<br>醫師將於看診前參閱您的資訊',
+  screeningTitle:'🏥 免費健康篩檢資訊', thItem:'篩檢項目', thTarget:'適用對象', thFreq:'頻率',
+  screeningCTA:'📋 如您符合以上資格，歡迎洽詢櫃台人員安排篩檢', btnNext:'📝 填寫下一位',
+  validationName:'⚠ 請輸入姓名',
+},
+'en': {
+  pageTitle:'Lichiun Medical — Patient Intake', subtitle:'Please fill in the information below to help the doctor understand your needs',
+  sectionBasic:'Basic Information', sectionSpecial:'Special Requests', sectionSymptoms:'Please check your symptoms', sectionOtherQ:'Other Questions',
+  labelClinic:'Clinic', labelPatientId:'Patient No.', labelName:'Name', labelWeight:'Weight',
+  optionalTag:'(optional)', weightUnit:'(kg)', optSelect:'Select',
+  optClinic1:'Clinic 1', optClinic2:'Clinic 2', optClinic3:'Clinic 3',
+  phPatientId:'Enter patient number if available', phName:'Enter your name',
+  labelDocs:'Documents needed', optDiagnosis:'📄 Diagnosis Certificate', optMedCert:'📄 Medical Visit Certificate',
+  labelMedPref:'Medication preference', optPill:'💊 Tablets', optPowder:'🧂 Powder',
+  labelAllergy:'Drug allergy', optNo:'No', optAllergyYes:'⚠️ Yes', optYes:'Yes',
+  phAllergy:'Name of allergy medication',
+  labelOther:'Other', optPregnancy:'🤰 Pregnant',
+  catFever:'Fever / Chills', chipFever:'Fever', chipChills:'Chills', chipAlternating:'Hot & Cold',
+  labelDuration:'How many days?', durToday:'Started today', dur1day:'1 day', dur23days:'2-3 days', dur46days:'4-6 days', dur1week:'About 1 week', durOver1week:'Over 1 week',
+  catENT:'Ear, Nose & Throat', chipCough:'Cough', chipSputum:'Phlegm', chipRunnyNose:'Runny nose', chipNasalDischarge:'Nasal discharge', chipCongestion:'Nasal congestion', chipSoreThroat:'Sore throat', chipThroatTight:'Throat tightness', chipSneezing:'Sneezing', chipEarPain:'Ear pain', chipDizziness:'Dizziness', chipEpistaxis:'Nosebleed',
+  labelPhlegmColor:'Phlegm color', phlegmClear:'Clear', phlegmWhite:'White', phlegmYellow:'Yellow', phlegmGreen:'Green', phlegmBrown:'Brown', phlegmBloody:'Bloody',
+  labelMedicated:'Have you taken medication?', phEntMed:'What medication? (e.g., cold medicine)',
+  catGI:'Gastrointestinal', chipAbdPain:'Abdominal pain', chipNausea:'Nausea', chipVomitSense:'Urge to vomit', chipDiarrhea:'Diarrhea', chipVomiting:'Vomiting', chipConstipation:'Constipation', chipMelena:'Black stool', chipHematochezia:'Bloody stool', chipHemorrhoids:'Hemorrhoids',
+  phGiMed:'What medication? (e.g., antacid, anti-diarrheal)',
+  catChronic:'Chronic diseases', chipHypertension:'Hypertension', chipDiabetes:'Diabetes', chipHyperlipidemia:'Hyperlipidemia', chipGout:'Gout', chipThyroid:'Thyroid', chipOther:'Other', phChronicOther:'Please specify other chronic diseases',
+  catOtherReq:'Other requests', chipCheckup:'Health check / Blood test', chipWeightLoss:'Weight loss', chipSkin:'Skin issues', chipInsomnia:'Insomnia', chipTravel:'Travel consultation', chipQuitSmoking:'Quit smoking', chipChronicRx:'Chronic prescription', chipAutonomic:'Autonomic dysfunction', chipVaccine:'Vaccine', phVaccine:'Please specify vaccine type',
+  phOtherNotes:'Any other concerns you would like to tell the doctor',
+  btnSubmit:'Submit', btnSubmitting:'Submitting...',
+  footer:'Lichiun Medical System © 2026 — Your data is used for this visit only',
+  tyTitle:'Form Submitted', tyMsg:'Thank you!<br>The doctor will review your information before the visit',
+  screeningTitle:'🏥 Free Health Screening Info', thItem:'Screening', thTarget:'Eligible', thFreq:'Frequency',
+  screeningCTA:'📋 If eligible, please ask the front desk to arrange screening', btnNext:'📝 Next patient',
+  validationName:'⚠ Please enter your name',
+},
+'vi': {
+  pageTitle:'Lichiun Medical — Phiếu khám bệnh', subtitle:'Vui lòng điền thông tin dưới đây để bác sĩ hiểu nhu cầu của bạn',
+  sectionBasic:'Thông tin cơ bản', sectionSpecial:'Yêu cầu đặc biệt', sectionSymptoms:'Vui lòng chọn triệu chứng', sectionOtherQ:'Câu hỏi khác',
+  labelClinic:'Phòng khám', labelPatientId:'Số thứ tự', labelName:'Họ tên', labelWeight:'Cân nặng',
+  optionalTag:'(không bắt buộc)', weightUnit:'(kg)', optSelect:'Chọn',
+  optClinic1:'Phòng 1', optClinic2:'Phòng 2', optClinic3:'Phòng 3',
+  phPatientId:'Nhập số thứ tự nếu có', phName:'Nhập họ tên',
+  labelDocs:'Giấy tờ cần thiết', optDiagnosis:'📄 Giấy chẩn đoán', optMedCert:'📄 Giấy khám bệnh',
+  labelMedPref:'Dạng thuốc', optPill:'💊 Viên', optPowder:'🧂 Bột',
+  labelAllergy:'Dị ứng thuốc', optNo:'Không', optAllergyYes:'⚠️ Có', optYes:'Có',
+  phAllergy:'Tên thuốc dị ứng',
+  labelOther:'Khác', optPregnancy:'🤰 Mang thai',
+  catFever:'Sốt / Ớn lạnh', chipFever:'Sốt', chipChills:'Ớn lạnh', chipAlternating:'Lúc nóng lúc lạnh',
+  labelDuration:'Bao nhiêu ngày?', durToday:'Hôm nay', dur1day:'1 ngày', dur23days:'2-3 ngày', dur46days:'4-6 ngày', dur1week:'Khoảng 1 tuần', durOver1week:'Hơn 1 tuần',
+  catENT:'Tai Mũi Họng', chipCough:'Ho', chipSputum:'Có đờm', chipRunnyNose:'Chảy nước mũi', chipNasalDischarge:'Nước mũi', chipCongestion:'Nghẹt mũi', chipSoreThroat:'Đau họng', chipThroatTight:'Vướng họng', chipSneezing:'Hắt hơi', chipEarPain:'Đau tai', chipDizziness:'Chóng mặt', chipEpistaxis:'Chảy máu mũi',
+  labelPhlegmColor:'Màu đờm', phlegmClear:'Trong', phlegmWhite:'Trắng', phlegmYellow:'Vàng', phlegmGreen:'Xanh', phlegmBrown:'Nâu', phlegmBloody:'Có máu',
+  labelMedicated:'Đã dùng thuốc chưa?', phEntMed:'Thuốc gì? (vd: thuốc cảm)',
+  catGI:'Tiêu hóa', chipAbdPain:'Đau bụng', chipNausea:'Buồn nôn', chipVomitSense:'Muốn nôn', chipDiarrhea:'Tiêu chảy', chipVomiting:'Nôn', chipConstipation:'Táo bón', chipMelena:'Phân đen', chipHematochezia:'Phân có máu', chipHemorrhoids:'Trĩ',
+  phGiMed:'Thuốc gì? (vd: thuốc dạ dày)',
+  catChronic:'Bệnh mãn tính', chipHypertension:'Cao huyết áp', chipDiabetes:'Tiểu đường', chipHyperlipidemia:'Mỡ máu cao', chipGout:'Gout', chipThyroid:'Tuyến giáp', chipOther:'Khác', phChronicOther:'Vui lòng ghi rõ',
+  catOtherReq:'Yêu cầu khác', chipCheckup:'Khám sức khỏe / Xét nghiệm', chipWeightLoss:'Giảm cân', chipSkin:'Vấn đề da', chipInsomnia:'Mất ngủ', chipTravel:'Tư vấn du lịch', chipQuitSmoking:'Cai thuốc', chipChronicRx:'Đơn thuốc mãn tính', chipAutonomic:'Rối loạn thần kinh', chipVaccine:'Vắc xin', phVaccine:'Loại vắc xin',
+  phOtherNotes:'Nếu có vấn đề khác muốn nói với bác sĩ',
+  btnSubmit:'Gửi', btnSubmitting:'Đang gửi...',
+  footer:'Lichiun Medical © 2026 — Thông tin chỉ dùng cho lần khám này',
+  tyTitle:'Đã gửi biểu mẫu', tyMsg:'Cảm ơn bạn!<br>Bác sĩ sẽ xem thông tin trước khi khám',
+  screeningTitle:'🏥 Thông tin khám sàng lọc miễn phí', thItem:'Hạng mục', thTarget:'Đối tượng', thFreq:'Tần suất',
+  screeningCTA:'📋 Nếu đủ điều kiện, vui lòng hỏi quầy lễ tân', btnNext:'📝 Bệnh nhân tiếp theo',
+  validationName:'⚠ Vui lòng nhập họ tên',
+},
+'th': {
+  pageTitle:'Lichiun Medical — แบบสอบถามผู้ป่วย', subtitle:'กรุณากรอกข้อมูลด้านล่างเพื่อช่วยให้แพทย์เข้าใจความต้องการของคุณ',
+  sectionBasic:'ข้อมูลพื้นฐาน', sectionSpecial:'คำขอพิเศษ', sectionSymptoms:'กรุณาเลือกอาการของคุณ', sectionOtherQ:'คำถามอื่นๆ',
+  labelClinic:'ห้องตรวจ', labelPatientId:'เลขที่', labelName:'ชื่อ-นามสกุล', labelWeight:'น้ำหนัก',
+  optionalTag:'(ไม่บังคับ)', weightUnit:'(กก.)', optSelect:'เลือก',
+  optClinic1:'ห้อง 1', optClinic2:'ห้อง 2', optClinic3:'ห้อง 3',
+  phPatientId:'กรอกเลขที่ถ้ามี', phName:'กรอกชื่อ-นามสกุล',
+  labelDocs:'เอกสารที่ต้องการ', optDiagnosis:'📄 ใบรับรองแพทย์', optMedCert:'📄 ใบรับรองการรักษา',
+  labelMedPref:'รูปแบบยา', optPill:'💊 เม็ด', optPowder:'🧂 ผง',
+  labelAllergy:'แพ้ยา', optNo:'ไม่', optAllergyYes:'⚠️ ใช่', optYes:'ใช่',
+  phAllergy:'ชื่อยาที่แพ้',
+  labelOther:'อื่นๆ', optPregnancy:'🤰 ตั้งครรภ์',
+  catFever:'ไข้ / หนาวสั่น', chipFever:'มีไข้', chipChills:'หนาวสั่น', chipAlternating:'ร้อนๆ หนาวๆ',
+  labelDuration:'กี่วัน?', durToday:'เริ่มวันนี้', dur1day:'1 วัน', dur23days:'2-3 วัน', dur46days:'4-6 วัน', dur1week:'ประมาณ 1 สัปดาห์', durOver1week:'มากกว่า 1 สัปดาห์',
+  catENT:'หู คอ จมูก', chipCough:'ไอ', chipSputum:'มีเสมหะ', chipRunnyNose:'น้ำมูกไหล', chipNasalDischarge:'มีน้ำมูก', chipCongestion:'คัดจมูก', chipSoreThroat:'เจ็บคอ', chipThroatTight:'แน่นคอ', chipSneezing:'จาม', chipEarPain:'ปวดหู', chipDizziness:'เวียนศีรษะ', chipEpistaxis:'เลือดกำเดา',
+  labelPhlegmColor:'สีเสมหะ', phlegmClear:'ใส', phlegmWhite:'ขาว', phlegmYellow:'เหลือง', phlegmGreen:'เขียว', phlegmBrown:'น้ำตาล', phlegmBloody:'มีเลือด',
+  labelMedicated:'เคยใช้ยาหรือไม่?', phEntMed:'ยาอะไร? (เช่น ยาแก้หวัด)',
+  catGI:'ระบบทางเดินอาหาร', chipAbdPain:'ปวดท้อง', chipNausea:'คลื่นไส้', chipVomitSense:'อยากอาเจียน', chipDiarrhea:'ท้องเสีย', chipVomiting:'อาเจียน', chipConstipation:'ท้องผูก', chipMelena:'อุจจาระดำ', chipHematochezia:'อุจจาระมีเลือด', chipHemorrhoids:'ริดสีดวง',
+  phGiMed:'ยาอะไร? (เช่น ยาลดกรด)',
+  catChronic:'โรคเรื้อรัง', chipHypertension:'ความดันสูง', chipDiabetes:'เบาหวาน', chipHyperlipidemia:'ไขมันสูง', chipGout:'เกาต์', chipThyroid:'ไทรอยด์', chipOther:'อื่นๆ', phChronicOther:'กรุณาระบุ',
+  catOtherReq:'คำขออื่นๆ', chipCheckup:'ตรวจสุขภาพ / เจาะเลือด', chipWeightLoss:'ลดน้ำหนัก', chipSkin:'ปัญหาผิวหนัง', chipInsomnia:'นอนไม่หลับ', chipTravel:'ปรึกษาการเดินทาง', chipQuitSmoking:'เลิกบุหรี่', chipChronicRx:'ใบสั่งยาเรื้อรัง', chipAutonomic:'ระบบประสาทอัตโนมัติ', chipVaccine:'วัคซีน', phVaccine:'ระบุชนิดวัคซีน',
+  phOtherNotes:'หากมีเรื่องอื่นอยากบอกแพทย์',
+  btnSubmit:'ส่ง', btnSubmitting:'กำลังส่ง...',
+  footer:'Lichiun Medical © 2026 — ข้อมูลใช้เฉพาะการรักษาครั้งนี้',
+  tyTitle:'ส่งแบบฟอร์มแล้ว', tyMsg:'ขอบคุณ!<br>แพทย์จะตรวจสอบข้อมูลก่อนการรักษา',
+  screeningTitle:'🏥 ข้อมูลการตรวจสุขภาพฟรี', thItem:'รายการ', thTarget:'กลุ่มเป้าหมาย', thFreq:'ความถี่',
+  screeningCTA:'📋 หากมีสิทธิ์ กรุณาสอบถามเคาน์เตอร์', btnNext:'📝 ผู้ป่วยถัดไป',
+  validationName:'⚠ กรุณากรอกชื่อ',
+},
+'id': {
+  pageTitle:'Lichiun Medical — Formulir Pasien', subtitle:'Silakan isi informasi di bawah ini untuk membantu dokter memahami kebutuhan Anda',
+  sectionBasic:'Informasi Dasar', sectionSpecial:'Permintaan Khusus', sectionSymptoms:'Silakan pilih gejala Anda', sectionOtherQ:'Pertanyaan Lain',
+  labelClinic:'Klinik', labelPatientId:'No. Pasien', labelName:'Nama', labelWeight:'Berat badan',
+  optionalTag:'(opsional)', weightUnit:'(kg)', optSelect:'Pilih',
+  optClinic1:'Klinik 1', optClinic2:'Klinik 2', optClinic3:'Klinik 3',
+  phPatientId:'Masukkan nomor pasien jika ada', phName:'Masukkan nama Anda',
+  labelDocs:'Dokumen diperlukan', optDiagnosis:'📄 Surat diagnosis', optMedCert:'📄 Surat keterangan berobat',
+  labelMedPref:'Preferensi obat', optPill:'💊 Tablet', optPowder:'🧂 Bubuk',
+  labelAllergy:'Alergi obat', optNo:'Tidak', optAllergyYes:'⚠️ Ya', optYes:'Ya',
+  phAllergy:'Nama obat yang alergi',
+  labelOther:'Lainnya', optPregnancy:'🤰 Hamil',
+  catFever:'Demam / Menggigil', chipFever:'Demam', chipChills:'Menggigil', chipAlternating:'Panas dingin',
+  labelDuration:'Berapa hari?', durToday:'Mulai hari ini', dur1day:'1 hari', dur23days:'2-3 hari', dur46days:'4-6 hari', dur1week:'Sekitar 1 minggu', durOver1week:'Lebih dari 1 minggu',
+  catENT:'Telinga Hidung Tenggorokan', chipCough:'Batuk', chipSputum:'Berdahak', chipRunnyNose:'Pilek', chipNasalDischarge:'Ingus', chipCongestion:'Hidung tersumbat', chipSoreThroat:'Sakit tenggorokan', chipThroatTight:'Tenggorokan terasa mengganjal', chipSneezing:'Bersin', chipEarPain:'Sakit telinga', chipDizziness:'Pusing', chipEpistaxis:'Mimisan',
+  labelPhlegmColor:'Warna dahak', phlegmClear:'Bening', phlegmWhite:'Putih', phlegmYellow:'Kuning', phlegmGreen:'Hijau', phlegmBrown:'Cokelat', phlegmBloody:'Berdarah',
+  labelMedicated:'Sudah minum obat?', phEntMed:'Obat apa? (misal: obat flu)',
+  catGI:'Pencernaan', chipAbdPain:'Sakit perut', chipNausea:'Mual', chipVomitSense:'Ingin muntah', chipDiarrhea:'Diare', chipVomiting:'Muntah', chipConstipation:'Sembelit', chipMelena:'BAB hitam', chipHematochezia:'BAB berdarah', chipHemorrhoids:'Wasir',
+  phGiMed:'Obat apa? (misal: obat maag)',
+  catChronic:'Penyakit kronis', chipHypertension:'Hipertensi', chipDiabetes:'Diabetes', chipHyperlipidemia:'Kolesterol tinggi', chipGout:'Asam urat', chipThyroid:'Tiroid', chipOther:'Lainnya', phChronicOther:'Sebutkan penyakit lainnya',
+  catOtherReq:'Permintaan lain', chipCheckup:'Cek kesehatan / Tes darah', chipWeightLoss:'Penurunan berat badan', chipSkin:'Masalah kulit', chipInsomnia:'Insomnia', chipTravel:'Konsultasi perjalanan', chipQuitSmoking:'Berhenti merokok', chipChronicRx:'Resep kronis', chipAutonomic:'Gangguan saraf otonom', chipVaccine:'Vaksin', phVaccine:'Jenis vaksin',
+  phOtherNotes:'Jika ada hal lain yang ingin disampaikan ke dokter',
+  btnSubmit:'Kirim', btnSubmitting:'Mengirim...',
+  footer:'Lichiun Medical © 2026 — Data hanya untuk kunjungan ini',
+  tyTitle:'Formulir terkirim', tyMsg:'Terima kasih!<br>Dokter akan meninjau informasi Anda sebelum pemeriksaan',
+  screeningTitle:'🏥 Info Skrining Kesehatan Gratis', thItem:'Skrining', thTarget:'Sasaran', thFreq:'Frekuensi',
+  screeningCTA:'📋 Jika memenuhi syarat, silakan tanya resepsionis', btnNext:'📝 Pasien berikutnya',
+  validationName:'⚠ Silakan masukkan nama',
+},
+};
+
+let currentLang = 'zh-Hant';
+let BRANCH = '';
+
+function setLanguage(lang) {
+  const t = TRANSLATIONS[lang] || TRANSLATIONS['zh-Hant'];
+  currentLang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (t[key] !== undefined) {
+      if (key === 'tyMsg') {
+        el.innerHTML = t[key];  // allow <br>
+      } else {
+        el.textContent = t[key];
+      }
+    }
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const key = el.dataset.i18nPh;
+    if (t[key] !== undefined) el.placeholder = t[key];
+  });
+  document.documentElement.lang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('selected', b.dataset.lang === lang);
+  });
+  // Re-apply branch subtitle if branch is set
+  if (BRANCH && t.subtitle) {
+    document.getElementById('branchSubtitle').textContent = BRANCH + ' — ' + t.subtitle;
+  }
+}
 
 (function() {
 
@@ -908,11 +1124,22 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyVFakl4ORVX2mF
   updateDateTime();
   setInterval(updateDateTime, 30000);
 
-  // ── 院區參數（?branch=本院）──
+  // ── 院區 + 語言參數 ──
   const urlParams = new URLSearchParams(window.location.search);
-  const BRANCH = urlParams.get('branch') || '';
+  BRANCH = urlParams.get('branch') || '';
   if (BRANCH) {
     document.getElementById('branchSubtitle').textContent = `${BRANCH} — 請填寫以下資訊，協助醫師了解您的需求`;
+  }
+
+  // 語言選擇器 click handlers
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+  });
+
+  // ?lang= URL 參數預選語言
+  const langParam = urlParams.get('lang');
+  if (langParam && TRANSLATIONS[langParam]) {
+    setLanguage(langParam);
   }
 
   // ── 追蹤各類已選症狀數量，控制 followup 顯示 ──
@@ -1024,9 +1251,9 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyVFakl4ORVX2mF
     }
     data.pregnancy = document.getElementById('pregnancyBtn').classList.contains('selected-amber');
 
-    // Fever chips
+    // Fever chips (use data-value for stable Chinese values)
     document.querySelectorAll('.chips[data-category="fever"] .chip.selected').forEach(chip => {
-      data.fever.push(chip.textContent.replace(/^✓\s*/, '').trim());
+      data.fever.push(chip.dataset.value || chip.textContent.replace(/^✓\s*/, '').trim());
     });
 
     // Phlegm color
@@ -1036,9 +1263,9 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyVFakl4ORVX2mF
     document.querySelectorAll('.chips').forEach(container => {
       const cat = container.dataset.category;
       container.querySelectorAll('.chip.selected').forEach(chip => {
-        const text = chip.textContent.replace(/^✓\s*/, '').trim();
+        const val = chip.dataset.value || chip.textContent.replace(/^✓\s*/, '').trim();
         if (cat && data.symptoms[cat] !== undefined) {
-          data.symptoms[cat].push(text);
+          data.symptoms[cat].push(val);
         }
       });
     });
@@ -1054,7 +1281,8 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyVFakl4ORVX2mF
       const nameInput = document.getElementById('name');
       nameInput.style.borderColor = 'var(--rose-500)';
       nameInput.focus();
-      nameInput.setAttribute('placeholder', '⚠ 請輸入姓名');
+      const warnMsg = currentLang === 'zh-Hant' ? '⚠ 請輸入姓名' : '⚠ Name required';
+      nameInput.setAttribute('placeholder', warnMsg);
       return;
     }
 
@@ -1063,7 +1291,8 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyVFakl4ORVX2mF
     // 如果有設定 Apps Script URL，送到 Google Sheets
     if (APPS_SCRIPT_URL) {
       btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span>送出中...';
+      const t = TRANSLATIONS[currentLang] || TRANSLATIONS['zh-Hant'];
+      btn.innerHTML = '<span class="spinner"></span>' + (t.btnSubmitting || '送出中...');
 
       try {
         // 將資料攤平成 Google Sheets 友好格式
@@ -1090,6 +1319,7 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyVFakl4ORVX2mF
           chronic: data.symptoms.chronic.join('、') + (data.chronicOther ? '（' + data.chronicOther + '）' : ''),
           other: data.symptoms.other.join('、') + (data.vaccine ? '（疫苗：' + data.vaccine + '）' : ''),
           otherNotes: data.otherNotes,
+          language: currentLang,
         };
 
         await fetch(APPS_SCRIPT_URL, {
@@ -1108,7 +1338,8 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyVFakl4ORVX2mF
     // 顯示感謝頁
     document.getElementById('formContainer').classList.add('hidden');
     document.getElementById('thankYou').classList.add('show');
-    document.getElementById('tyName').textContent = `${data.name} 您好`;
+    const greetSuffix = currentLang === 'zh-Hant' ? ' 您好' : '';
+    document.getElementById('tyName').textContent = data.name + greetSuffix;
   });
 
   // Reset name style
