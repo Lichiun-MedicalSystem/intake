@@ -590,6 +590,134 @@
 
   .form-container.hidden { display: none; }
 
+  /* ─── Visit Type Selection ─── */
+  .visit-screen {
+    min-height: 100vh;
+    background: linear-gradient(180deg, var(--teal-600) 0%, var(--teal-800) 280px, var(--slate-100) 280px);
+  }
+  .visit-screen.hidden { display: none; }
+  .visit-choices {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 0 24px;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  .visit-choice {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--white);
+    border: 2px solid var(--slate-200);
+    border-radius: 16px;
+    padding: 22px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    animation: slideUp 0.5s ease both;
+  }
+  .visit-choice:nth-child(1) { animation-delay: 0.1s; }
+  .visit-choice:nth-child(2) { animation-delay: 0.2s; }
+  .visit-choice:hover { border-color: var(--teal-500); background: var(--teal-50); }
+  .visit-choice:active { transform: scale(0.98); }
+  .visit-choice-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .visit-choice-icon.new { background: linear-gradient(135deg, var(--amber-50), #FEF3C7); }
+  .visit-choice-icon.return { background: linear-gradient(135deg, var(--teal-50), var(--teal-100)); }
+  .visit-choice-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--slate-900);
+    margin-bottom: 4px;
+  }
+  .visit-choice-desc {
+    font-size: 13px;
+    color: var(--slate-500);
+    line-height: 1.4;
+  }
+
+  /* ─── Consent Screen ─── */
+  .consent-screen {
+    min-height: 100vh;
+    background: linear-gradient(180deg, var(--teal-600) 0%, var(--teal-800) 280px, var(--slate-100) 280px);
+  }
+  .consent-screen.hidden { display: none; }
+  .consent-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 24px 20px;
+    margin: 0 12px;
+    max-width: 440px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    animation: slideUp 0.5s ease 0.1s both;
+  }
+  .consent-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--teal-800);
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .consent-text {
+    font-size: 13px;
+    color: var(--slate-700);
+    line-height: 1.8;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: var(--slate-50);
+    border-radius: 12px;
+    border: 1px solid var(--slate-200);
+    max-height: 320px;
+    overflow-y: auto;
+  }
+  .consent-btns {
+    display: flex;
+    gap: 10px;
+  }
+  .consent-btns button {
+    flex: 1;
+    height: 48px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+  .consent-btns .btn-agree {
+    background: linear-gradient(135deg, var(--teal-600), var(--teal-800));
+    color: var(--white);
+    box-shadow: 0 4px 16px rgba(14,116,144,0.3);
+  }
+  .consent-btns .btn-decline {
+    background: var(--slate-100);
+    color: var(--slate-500);
+  }
+  .consent-btns button:active { transform: scale(0.97); }
+
+  /* ─── Registration Form ─── */
+  .reg-screen {
+    min-height: 100vh;
+    background: linear-gradient(180deg, var(--teal-600) 0%, var(--teal-800) 280px, var(--slate-100) 280px);
+  }
+  .reg-screen.hidden { display: none; }
+  .field textarea.addr-input {
+    height: 44px;
+    min-height: 44px;
+    resize: none;
+  }
+
   /* ─── Language Selector ─── */
   .lang-selector {
     display: flex;
@@ -620,8 +748,129 @@
 </head>
 <body>
 
+<!-- ═══ Visit Type Selection ═══ -->
+<div class="visit-screen" id="visitScreen">
+  <div class="header">
+    <img src="logo.png" alt="立群" class="logo-img">
+    <h1 data-i18n="pageTitle">立群醫療體系 問診表單</h1>
+    <p class="subtitle" id="visitSubtitle" data-i18n="subtitle">請填寫以下資訊，協助醫師了解您的需求</p>
+    <div class="datetime" id="visitDatetime"></div>
+    <div class="lang-selector">
+      <button class="lang-btn selected" data-lang="zh-Hant">繁體中文</button>
+      <button class="lang-btn" data-lang="en">English</button>
+      <button class="lang-btn" data-lang="vi">Tiếng Việt</button>
+      <button class="lang-btn" data-lang="th">ภาษาไทย</button>
+      <button class="lang-btn" data-lang="id">Bahasa Indonesia</button>
+    </div>
+  </div>
+  <div class="visit-choices">
+    <div class="visit-choice" id="choiceNew">
+      <div class="visit-choice-icon new">🆕</div>
+      <div>
+        <div class="visit-choice-title" data-i18n="visitNew">初診 — 第一次來</div>
+        <div class="visit-choice-desc" data-i18n="visitNewDesc">需填寫基本資料 + 問診表</div>
+      </div>
+    </div>
+    <div class="visit-choice" id="choiceReturn">
+      <div class="visit-choice-icon return">🔄</div>
+      <div>
+        <div class="visit-choice-title" data-i18n="visitReturn">複診 — 看過的醫師</div>
+        <div class="visit-choice-desc" data-i18n="visitReturnDesc">直接填寫問診表</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer" data-i18n="footer">立群醫療體系 &copy; 2026 — 您的資料僅供本次看診使用</div>
+</div>
+
+<!-- ═══ Privacy Consent ═══ -->
+<div class="consent-screen hidden" id="consentScreen">
+  <div class="header">
+    <img src="logo.png" alt="立群" class="logo-img">
+    <h1 data-i18n="consentHeader">個人資料蒐集告知</h1>
+    <p class="subtitle" data-i18n="consentSubtitle">Personal Data Collection Notice</p>
+  </div>
+  <div class="consent-card">
+    <div class="consent-title" data-i18n="consentTitle">個人資料保護法告知事項</div>
+    <div class="consent-text" data-i18n="consentBody">
+      依據「個人資料保護法」規定，本診所蒐集您的個人資料，謹向您告知以下事項：<br><br>
+      <b>一、蒐集目的：</b><br>
+      醫療與健康管理、掛號與就診服務。<br><br>
+      <b>二、蒐集類別：</b><br>
+      姓名、身分證字號、出生年月日、聯絡電話、通訊地址等基本資料，以及病歷、就診紀錄等醫療相關資料。<br><br>
+      <b>三、利用期間、地區、對象及方式：</b><br>
+      • 期間：本診所營運期間或依法令規定之保存期限。<br>
+      • 地區：中華民國境內。<br>
+      • 對象：本診所及依法令規定應配合之機關（如健保署）。<br>
+      • 方式：以書面、電子或其他合法方式。<br><br>
+      <b>四、您的權利：</b><br>
+      您可依個人資料保護法第 3 條規定，行使查詢、閱覽、請求複製、補充、更正、停止蒐集處理利用或刪除等權利。<br><br>
+      <b>五、不提供之影響：</b><br>
+      若您選擇不提供上述個人資料，可能影響本診所提供完整醫療服務之能力。
+    </div>
+    <div class="consent-btns">
+      <button class="btn-decline" id="consentDecline" data-i18n="consentDecline">不同意</button>
+      <button class="btn-agree" id="consentAgree" data-i18n="consentAgree">我已閱讀並同意</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Registration Form (New Patient) ═══ -->
+<div class="reg-screen hidden" id="regScreen">
+  <div class="header">
+    <img src="logo.png" alt="立群" class="logo-img">
+    <h1 data-i18n="regHeader">初診基本資料</h1>
+    <p class="subtitle" id="regSubtitle" data-i18n="regSubtitle">請填寫以下資料，方便櫃檯為您建檔</p>
+  </div>
+  <div class="form-wrap">
+    <div class="section">
+      <div class="section-title">
+        <span class="section-icon">👤</span> <span data-i18n="regSectionTitle">個人基本資料</span>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label data-i18n="labelRegName">姓名</label>
+          <input type="text" id="regName" data-i18n-ph="phRegName" placeholder="請輸入姓名">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label data-i18n="labelNationalId">身分證字號</label>
+          <input type="text" id="regNationalId" data-i18n-ph="phNationalId" placeholder="例：A123456789" maxlength="10" style="text-transform: uppercase;">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label data-i18n="labelBirthday">出生年月日（民國）</label>
+          <div style="display:flex; gap:6px; align-items:center;">
+            <input type="number" id="regBirthY" placeholder="年" style="width:70px;" min="1" max="120">
+            <span style="color:var(--slate-400);">/</span>
+            <input type="number" id="regBirthM" placeholder="月" style="width:60px;" min="1" max="12">
+            <span style="color:var(--slate-400);">/</span>
+            <input type="number" id="regBirthD" placeholder="日" style="width:60px;" min="1" max="31">
+          </div>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label data-i18n="labelPhone">聯絡電話</label>
+          <input type="tel" id="regPhone" data-i18n-ph="phPhone" placeholder="例：0912-345-678">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label data-i18n="labelAddress">通訊地址</label>
+          <textarea class="addr-input" id="regAddress" data-i18n-ph="phAddress" placeholder="請輸入通訊地址"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="submit-wrap">
+    <button class="submit-btn" id="regNextBtn" data-i18n="regNextBtn">下一步：填寫問診表</button>
+  </div>
+</div>
+
 <!-- ═══ Form ═══ -->
-<div class="form-container" id="formContainer">
+<div class="form-container hidden" id="formContainer">
   <div class="header">
     <img src="logo.png" alt="立群" class="logo-img">
     <h1 data-i18n="pageTitle">立群醫療體系 問診表單</h1>
@@ -958,6 +1207,19 @@ const TRANSLATIONS = {
   screeningTitle:'🏥 免費健康篩檢資訊', thItem:'篩檢項目', thTarget:'適用對象', thFreq:'頻率',
   screeningCTA:'📋 如您符合以上資格，歡迎洽詢櫃台人員安排篩檢', btnNext:'📝 填寫下一位',
   validationName:'⚠ 請輸入姓名',
+  visitNew:'初診 — 第一次來', visitNewDesc:'需填寫基本資料 + 問診表',
+  visitReturn:'複診 — 看過的醫師', visitReturnDesc:'直接填寫問診表',
+  consentHeader:'個人資料蒐集告知', consentSubtitle:'Personal Data Collection Notice',
+  consentTitle:'個人資料保護法告知事項',
+  consentDecline:'不同意', consentAgree:'我已閱讀並同意',
+  regHeader:'初診基本資料', regSubtitle:'請填寫以下資料，方便櫃檯為您建檔',
+  regSectionTitle:'個人基本資料',
+  labelRegName:'姓名', phRegName:'請輸入姓名',
+  labelNationalId:'身分證字號', phNationalId:'例：A123456789',
+  labelBirthday:'出生年月日（民國）',
+  labelPhone:'聯絡電話', phPhone:'例：0912-345-678',
+  labelAddress:'通訊地址', phAddress:'請輸入通訊地址',
+  regNextBtn:'下一步：填寫問診表', regValidation:'⚠ 請填寫姓名與身分證字號',
 },
 'en': {
   pageTitle:'Lichiun Medical — Patient Intake', subtitle:'Please fill in the information below to help the doctor understand your needs',
@@ -987,6 +1249,19 @@ const TRANSLATIONS = {
   screeningTitle:'🏥 Free Health Screening Info', thItem:'Screening', thTarget:'Eligible', thFreq:'Frequency',
   screeningCTA:'📋 If eligible, please ask the front desk to arrange screening', btnNext:'📝 Next patient',
   validationName:'⚠ Please enter your name',
+  visitNew:'New Patient — First Visit', visitNewDesc:'Fill in basic info + intake form',
+  visitReturn:'Returning Patient', visitReturnDesc:'Go to intake form directly',
+  consentHeader:'Data Collection Notice', consentSubtitle:'Personal Data Collection Notice',
+  consentTitle:'Personal Data Protection Act Notice',
+  consentDecline:'Decline', consentAgree:'I have read and agree',
+  regHeader:'New Patient Registration', regSubtitle:'Please fill in your details for registration',
+  regSectionTitle:'Personal Information',
+  labelRegName:'Full Name', phRegName:'Enter your name',
+  labelNationalId:'ID Number', phNationalId:'e.g. A123456789',
+  labelBirthday:'Date of Birth (ROC)',
+  labelPhone:'Phone', phPhone:'e.g. 0912-345-678',
+  labelAddress:'Address', phAddress:'Enter your address',
+  regNextBtn:'Next: Intake Form', regValidation:'⚠ Please enter name and ID number',
 },
 'vi': {
   pageTitle:'Lichiun Medical — Phiếu khám bệnh', subtitle:'Vui lòng điền thông tin dưới đây để bác sĩ hiểu nhu cầu của bạn',
@@ -1016,6 +1291,19 @@ const TRANSLATIONS = {
   screeningTitle:'🏥 Thông tin khám sàng lọc miễn phí', thItem:'Hạng mục', thTarget:'Đối tượng', thFreq:'Tần suất',
   screeningCTA:'📋 Nếu đủ điều kiện, vui lòng hỏi quầy lễ tân', btnNext:'📝 Bệnh nhân tiếp theo',
   validationName:'⚠ Vui lòng nhập họ tên',
+  visitNew:'Bệnh nhân mới — Lần đầu', visitNewDesc:'Điền thông tin cơ bản + phiếu khám',
+  visitReturn:'Tái khám', visitReturnDesc:'Đi thẳng đến phiếu khám',
+  consentHeader:'Thông báo thu thập dữ liệu', consentSubtitle:'Personal Data Collection Notice',
+  consentTitle:'Thông báo bảo vệ dữ liệu cá nhân',
+  consentDecline:'Không đồng ý', consentAgree:'Tôi đã đọc và đồng ý',
+  regHeader:'Đăng ký bệnh nhân mới', regSubtitle:'Vui lòng điền thông tin để đăng ký',
+  regSectionTitle:'Thông tin cá nhân',
+  labelRegName:'Họ tên', phRegName:'Nhập họ tên',
+  labelNationalId:'Số CCCD', phNationalId:'vd: A123456789',
+  labelBirthday:'Ngày sinh',
+  labelPhone:'Số điện thoại', phPhone:'vd: 0912-345-678',
+  labelAddress:'Địa chỉ', phAddress:'Nhập địa chỉ',
+  regNextBtn:'Tiếp: Phiếu khám', regValidation:'⚠ Vui lòng nhập họ tên và số CCCD',
 },
 'th': {
   pageTitle:'Lichiun Medical — แบบสอบถามผู้ป่วย', subtitle:'กรุณากรอกข้อมูลด้านล่างเพื่อช่วยให้แพทย์เข้าใจความต้องการของคุณ',
@@ -1045,6 +1333,19 @@ const TRANSLATIONS = {
   screeningTitle:'🏥 ข้อมูลการตรวจสุขภาพฟรี', thItem:'รายการ', thTarget:'กลุ่มเป้าหมาย', thFreq:'ความถี่',
   screeningCTA:'📋 หากมีสิทธิ์ กรุณาสอบถามเคาน์เตอร์', btnNext:'📝 ผู้ป่วยถัดไป',
   validationName:'⚠ กรุณากรอกชื่อ',
+  visitNew:'ผู้ป่วยใหม่ — ครั้งแรก', visitNewDesc:'กรอกข้อมูลส่วนตัว + แบบสอบถาม',
+  visitReturn:'ผู้ป่วยเก่า', visitReturnDesc:'ไปที่แบบสอบถามโดยตรง',
+  consentHeader:'แจ้งเก็บข้อมูล', consentSubtitle:'Personal Data Collection Notice',
+  consentTitle:'ประกาศการคุ้มครองข้อมูลส่วนบุคคล',
+  consentDecline:'ไม่ยินยอม', consentAgree:'ฉันได้อ่านและยินยอม',
+  regHeader:'ลงทะเบียนผู้ป่วยใหม่', regSubtitle:'กรุณากรอกข้อมูลเพื่อลงทะเบียน',
+  regSectionTitle:'ข้อมูลส่วนตัว',
+  labelRegName:'ชื่อ-นามสกุล', phRegName:'กรอกชื่อ-นามสกุล',
+  labelNationalId:'เลขบัตรประชาชน', phNationalId:'เช่น A123456789',
+  labelBirthday:'วันเกิด',
+  labelPhone:'เบอร์โทร', phPhone:'เช่น 0912-345-678',
+  labelAddress:'ที่อยู่', phAddress:'กรอกที่อยู่',
+  regNextBtn:'ถัดไป: แบบสอบถาม', regValidation:'⚠ กรุณากรอกชื่อและเลขบัตร',
 },
 'id': {
   pageTitle:'Lichiun Medical — Formulir Pasien', subtitle:'Silakan isi informasi di bawah ini untuk membantu dokter memahami kebutuhan Anda',
@@ -1074,6 +1375,19 @@ const TRANSLATIONS = {
   screeningTitle:'🏥 Info Skrining Kesehatan Gratis', thItem:'Skrining', thTarget:'Sasaran', thFreq:'Frekuensi',
   screeningCTA:'📋 Jika memenuhi syarat, silakan tanya resepsionis', btnNext:'📝 Pasien berikutnya',
   validationName:'⚠ Silakan masukkan nama',
+  visitNew:'Pasien Baru — Pertama kali', visitNewDesc:'Isi data diri + formulir',
+  visitReturn:'Pasien Lama', visitReturnDesc:'Langsung ke formulir',
+  consentHeader:'Pemberitahuan Pengumpulan Data', consentSubtitle:'Personal Data Collection Notice',
+  consentTitle:'Pemberitahuan Perlindungan Data Pribadi',
+  consentDecline:'Tidak setuju', consentAgree:'Saya telah membaca dan setuju',
+  regHeader:'Pendaftaran Pasien Baru', regSubtitle:'Silakan isi data untuk pendaftaran',
+  regSectionTitle:'Informasi Pribadi',
+  labelRegName:'Nama lengkap', phRegName:'Masukkan nama',
+  labelNationalId:'Nomor KTP', phNationalId:'cth: A123456789',
+  labelBirthday:'Tanggal lahir',
+  labelPhone:'Telepon', phPhone:'cth: 0912-345-678',
+  labelAddress:'Alamat', phAddress:'Masukkan alamat',
+  regNextBtn:'Lanjut: Formulir', regValidation:'⚠ Silakan isi nama dan nomor KTP',
 },
 };
 
@@ -1101,15 +1415,22 @@ function setLanguage(lang) {
   document.querySelectorAll('.lang-btn').forEach(b => {
     b.classList.toggle('selected', b.dataset.lang === lang);
   });
-  // Re-apply branch subtitle if branch is set
+  // Re-apply branch subtitle on all screens
   if (BRANCH && t.subtitle) {
-    document.getElementById('branchSubtitle').textContent = BRANCH + ' — ' + t.subtitle;
+    const subs = ['branchSubtitle', 'visitSubtitle', 'regSubtitle'];
+    subs.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = BRANCH + ' — ' + (t[el.dataset.i18n] || t.subtitle);
+    });
   }
 }
 
 (function() {
 
-  // ── 自動帶入日期時間 ──
+  let isNewPatient = false;
+  let regData = {};
+
+  // ── 自動帶入日期時間（所有畫面） ──
   function updateDateTime() {
     const now = new Date();
     const y = now.getFullYear();
@@ -1119,7 +1440,10 @@ function setLanguage(lang) {
     const w = weekdays[now.getDay()];
     const h = String(now.getHours()).padStart(2, '0');
     const min = String(now.getMinutes()).padStart(2, '0');
-    document.getElementById('datetime').textContent = `${y}/${m}/${d}（${w}）${h}:${min}`;
+    const text = `${y}/${m}/${d}（${w}）${h}:${min}`;
+    document.getElementById('datetime').textContent = text;
+    const vdt = document.getElementById('visitDatetime');
+    if (vdt) vdt.textContent = text;
   }
   updateDateTime();
   setInterval(updateDateTime, 30000);
@@ -1129,6 +1453,8 @@ function setLanguage(lang) {
   BRANCH = urlParams.get('branch') || '';
   if (BRANCH) {
     document.getElementById('branchSubtitle').textContent = `${BRANCH} — 請填寫以下資訊，協助醫師了解您的需求`;
+    const vs = document.getElementById('visitSubtitle');
+    if (vs) vs.textContent = `${BRANCH} — 請填寫以下資訊，協助醫師了解您的需求`;
   }
 
   // 語言選擇器 click handlers
@@ -1141,6 +1467,56 @@ function setLanguage(lang) {
   if (langParam && TRANSLATIONS[langParam]) {
     setLanguage(langParam);
   }
+
+  // ── 畫面切換 helpers ──
+  function showScreen(id) {
+    ['visitScreen', 'consentScreen', 'regScreen', 'formContainer'].forEach(s => {
+      document.getElementById(s).classList.toggle('hidden', s !== id);
+    });
+    window.scrollTo(0, 0);
+  }
+
+  // ── 初診/複診選擇 ──
+  document.getElementById('choiceNew').addEventListener('click', () => {
+    isNewPatient = true;
+    showScreen('consentScreen');
+  });
+  document.getElementById('choiceReturn').addEventListener('click', () => {
+    isNewPatient = false;
+    showScreen('formContainer');
+  });
+
+  // ── 個資同意 ──
+  document.getElementById('consentAgree').addEventListener('click', () => {
+    showScreen('regScreen');
+  });
+  document.getElementById('consentDecline').addEventListener('click', () => {
+    showScreen('visitScreen');
+  });
+
+  // ── 初診基本資料 → 問診表 ──
+  document.getElementById('regNextBtn').addEventListener('click', () => {
+    const regName = document.getElementById('regName').value.trim();
+    const regId = document.getElementById('regNationalId').value.trim().toUpperCase();
+    if (!regName || !regId) {
+      const t = TRANSLATIONS[currentLang] || TRANSLATIONS['zh-Hant'];
+      alert(t.regValidation || '請填寫姓名與身分證字號');
+      return;
+    }
+    const birthY = document.getElementById('regBirthY').value;
+    const birthM = document.getElementById('regBirthM').value.padStart(2, '0');
+    const birthD = document.getElementById('regBirthD').value.padStart(2, '0');
+    regData = {
+      regName: regName,
+      nationalId: regId,
+      birthday: birthY && birthM && birthD ? `${birthY}/${birthM}/${birthD}` : '',
+      phone: document.getElementById('regPhone').value.trim(),
+      address: document.getElementById('regAddress').value.trim(),
+    };
+    // 帶入姓名到問診表
+    document.getElementById('name').value = regName;
+    showScreen('formContainer');
+  });
 
   // ── 追蹤各類已選症狀數量，控制 followup 顯示 ──
   function updateFollowup(category) {
@@ -1320,6 +1696,11 @@ function setLanguage(lang) {
           other: data.symptoms.other.join('、') + (data.vaccine ? '（疫苗：' + data.vaccine + '）' : ''),
           otherNotes: data.otherNotes,
           language: currentLang,
+          isNewPatient: isNewPatient ? '是' : '否',
+          nationalId: regData.nationalId || '',
+          birthday: regData.birthday || '',
+          phone: regData.phone || '',
+          address: regData.address || '',
         };
 
         await fetch(APPS_SCRIPT_URL, {
