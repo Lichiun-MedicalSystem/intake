@@ -840,14 +840,8 @@
       </div>
       <div class="field-row">
         <div class="field">
-          <label data-i18n="labelBirthday">出生年月日（民國）</label>
-          <div style="display:flex; gap:6px; align-items:center;">
-            <input type="number" id="regBirthY" placeholder="年" style="width:70px;" min="1" max="120">
-            <span style="color:var(--slate-400);">/</span>
-            <input type="number" id="regBirthM" placeholder="月" style="width:60px;" min="1" max="12">
-            <span style="color:var(--slate-400);">/</span>
-            <input type="number" id="regBirthD" placeholder="日" style="width:60px;" min="1" max="31">
-          </div>
+          <label data-i18n="labelBirthday">出生年月日</label>
+          <input type="date" id="regBirthday" style="width:100%; padding:10px 12px; border:1.5px solid var(--slate-300); border-radius:10px; font-size:1rem; color:var(--slate-900);">
         </div>
       </div>
       <div class="field-row">
@@ -1216,7 +1210,7 @@ const TRANSLATIONS = {
   regSectionTitle:'個人基本資料',
   labelRegName:'姓名', phRegName:'請輸入姓名',
   labelNationalId:'身分證字號', phNationalId:'例：A123456789',
-  labelBirthday:'出生年月日（民國）',
+  labelBirthday:'出生年月日',
   labelPhone:'聯絡電話', phPhone:'例：0912-345-678',
   labelAddress:'通訊地址', phAddress:'請輸入通訊地址',
   regNextBtn:'下一步：填寫問診表', regValidation:'⚠ 請填寫姓名與身分證字號',
@@ -1258,7 +1252,7 @@ const TRANSLATIONS = {
   regSectionTitle:'Personal Information',
   labelRegName:'Full Name', phRegName:'Enter your name',
   labelNationalId:'ID Number', phNationalId:'e.g. A123456789',
-  labelBirthday:'Date of Birth (ROC)',
+  labelBirthday:'Date of Birth',
   labelPhone:'Phone', phPhone:'e.g. 0912-345-678',
   labelAddress:'Address', phAddress:'Enter your address',
   regNextBtn:'Next: Intake Form', regValidation:'⚠ Please enter name and ID number',
@@ -1503,13 +1497,17 @@ function setLanguage(lang) {
       alert(t.regValidation || '請填寫姓名與身分證字號');
       return;
     }
-    const birthY = document.getElementById('regBirthY').value.padStart(3, '0');
-    const birthM = document.getElementById('regBirthM').value.padStart(2, '0');
-    const birthD = document.getElementById('regBirthD').value.padStart(2, '0');
+    const birthVal = document.getElementById('regBirthday').value; // yyyy-MM-dd
+    let rocBirthday = '';
+    if (birthVal) {
+      const [y, m, d] = birthVal.split('-');
+      const rocY = String(parseInt(y) - 1911).padStart(3, '0');
+      rocBirthday = rocY + m + d; // e.g. "0890305"
+    }
     regData = {
       regName: regName,
       nationalId: regId,
-      birthday: birthY && birthM && birthD ? `${birthY}${birthM}${birthD}` : '',
+      birthday: rocBirthday,
       phone: document.getElementById('regPhone').value.trim(),
       address: document.getElementById('regAddress').value.trim(),
     };
