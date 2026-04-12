@@ -1503,13 +1503,13 @@ function setLanguage(lang) {
       alert(t.regValidation || '請填寫姓名與身分證字號');
       return;
     }
-    const birthY = document.getElementById('regBirthY').value;
+    const birthY = document.getElementById('regBirthY').value.padStart(3, '0');
     const birthM = document.getElementById('regBirthM').value.padStart(2, '0');
     const birthD = document.getElementById('regBirthD').value.padStart(2, '0');
     regData = {
       regName: regName,
       nationalId: regId,
-      birthday: birthY && birthM && birthD ? `${birthY}/${birthM}/${birthD}` : '',
+      birthday: birthY && birthM && birthD ? `${birthY}${birthM}${birthD}` : '',
       phone: document.getElementById('regPhone').value.trim(),
       address: document.getElementById('regAddress').value.trim(),
     };
