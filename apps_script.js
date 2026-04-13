@@ -15,6 +15,7 @@ const HEADERS = [
   'clinic',         // 診間
   'name',           // 姓名
   'patientId',      // 診號
+  'height',         // 身高
   'weight',         // 體重
   'docs',           // 需要文件
   'medPreference',  // 藥物偏好
@@ -41,7 +42,7 @@ const HEADERS = [
 
 // 表頭中文名稱（第一次執行時自動寫入）
 const HEADERS_ZH = [
-  '時間戳記', '日期時間', '院區', '診間', '姓名', '診號', '體重',
+  '時間戳記', '日期時間', '院區', '診間', '姓名', '診號', '身高', '體重',
   '需要文件', '藥物偏好', '藥物過敏', '懷孕',
   '發燒/畏寒', '發燒天數',
   '耳鼻喉症狀', '耳鼻喉天數', '耳鼻喉用藥',
@@ -75,8 +76,16 @@ function doPost(e) {
     // 按照 HEADERS 順序組成一列
     const row = HEADERS.map(key => data[key] || '');
 
-    // 寫入試算表
-    sheet.appendRow(row);
+    // 寫入試算表（用 setValues + 先設純文字格式，防止前導 0 被吃掉）
+    const newRow = sheet.getLastRow() + 1;
+    const textCols = ['patientId', 'nationalId', 'birthday', 'phone'];
+    textCols.forEach(key => {
+      const idx = HEADERS.indexOf(key);
+      if (idx >= 0) {
+        sheet.getRange(newRow, idx + 1).setNumberFormat('@');
+      }
+    });
+    sheet.getRange(newRow, 1, 1, row.length).setValues([row]);
 
     // 自動調整欄寬（僅前幾次）
     if (sheet.getLastRow() <= 3) {

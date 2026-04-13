@@ -725,6 +725,7 @@
     gap: 6px;
     margin-top: 12px;
     flex-wrap: wrap;
+    padding: 0 8px;
   }
   .lang-btn {
     background: rgba(255,255,255,0.15);
@@ -736,6 +737,7 @@
     cursor: pointer;
     transition: all 0.2s;
     font-family: 'Noto Sans TC', 'Noto Sans Thai', sans-serif;
+    white-space: nowrap;
   }
   .lang-btn:hover { background: rgba(255,255,255,0.25); }
   .lang-btn.selected {
@@ -743,6 +745,10 @@
     color: var(--teal-700);
     font-weight: 600;
     border-color: var(--white);
+  }
+  @media (max-width: 480px) {
+    .lang-selector { gap: 4px; padding: 0 4px; }
+    .lang-btn { padding: 4px 9px; font-size: 11px; border-radius: 14px; }
   }
 </style>
 </head>
@@ -760,7 +766,7 @@
       <button class="lang-btn" data-lang="en">English</button>
       <button class="lang-btn" data-lang="vi">Tiếng Việt</button>
       <button class="lang-btn" data-lang="th">ภาษาไทย</button>
-      <button class="lang-btn" data-lang="id">Bahasa Indonesia</button>
+      <button class="lang-btn" data-lang="id">Indonesia</button>
     </div>
   </div>
   <div class="visit-choices">
@@ -876,7 +882,7 @@
       <button class="lang-btn" data-lang="en">English</button>
       <button class="lang-btn" data-lang="vi">Tiếng Việt</button>
       <button class="lang-btn" data-lang="th">ภาษาไทย</button>
-      <button class="lang-btn" data-lang="id">Bahasa Indonesia</button>
+      <button class="lang-btn" data-lang="id">Indonesia</button>
     </div>
   </div>
 
@@ -906,6 +912,12 @@
         <div class="field">
           <label data-i18n="labelName">姓名</label>
           <input type="text" id="name" data-i18n-ph="phName" placeholder="請輸入姓名">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field field-sm">
+          <label><span data-i18n="labelHeight">身高</span> <span class="optional" data-i18n="heightUnit">(公分)</span></label>
+          <input type="number" id="height" placeholder="cm">
         </div>
         <div class="field field-sm">
           <label><span data-i18n="labelWeight">體重</span> <span class="optional" data-i18n="weightUnit">(公斤)</span></label>
@@ -1176,8 +1188,8 @@ const TRANSLATIONS = {
 'zh-Hant': {
   pageTitle:'立群醫療體系 問診表單', subtitle:'請填寫以下資訊，協助醫師了解您的需求',
   sectionBasic:'基本資料', sectionSpecial:'特殊需求', sectionSymptoms:'請勾選您的症狀', sectionOtherQ:'其他問題',
-  labelClinic:'診間', labelPatientId:'診號', labelName:'姓名', labelWeight:'體重',
-  optionalTag:'(選填)', weightUnit:'(公斤)', optSelect:'請選擇',
+  labelClinic:'診間', labelPatientId:'診號', labelName:'姓名', labelHeight:'身高', labelWeight:'體重',
+  optionalTag:'(選填)', heightUnit:'(公分)', weightUnit:'(公斤)', optSelect:'請選擇',
   optClinic1:'一診', optClinic2:'二診', optClinic3:'三診',
   phPatientId:'如有診號請填寫', phName:'請輸入姓名',
   labelDocs:'需要文件', optDiagnosis:'📄 診斷證明書', optMedCert:'📄 就醫證明',
@@ -1205,6 +1217,7 @@ const TRANSLATIONS = {
   visitReturn:'複診 — 看過的醫師', visitReturnDesc:'直接填寫問診表',
   consentHeader:'個人資料蒐集告知', consentSubtitle:'Personal Data Collection Notice',
   consentTitle:'個人資料保護法告知事項',
+  consentBody:'依據「個人資料保護法」規定，本診所蒐集您的個人資料，謹向您告知以下事項：<br><br><b>一、蒐集目的：</b><br>醫療與健康管理、掛號與就診服務。<br><br><b>二、蒐集類別：</b><br>姓名、身分證字號、出生年月日、聯絡電話、通訊地址等基本資料，以及病歷、就診紀錄等醫療相關資料。<br><br><b>三、利用期間、地區、對象及方式：</b><br>• 期間：本診所營運期間或依法令規定之保存期限。<br>• 地區：中華民國境內。<br>• 對象：本診所及依法令規定應配合之機關（如健保署）。<br>• 方式：以書面、電子或其他合法方式。<br><br><b>四、您的權利：</b><br>您可依個人資料保護法第 3 條規定，行使查詢、閱覽、請求複製、補充、更正、停止蒐集處理利用或刪除等權利。<br><br><b>五、不提供之影響：</b><br>若您選擇不提供上述個人資料，可能影響本診所提供完整醫療服務之能力。',
   consentDecline:'不同意', consentAgree:'我已閱讀並同意',
   regHeader:'初診基本資料', regSubtitle:'請填寫以下資料，方便櫃檯為您建檔',
   regSectionTitle:'個人基本資料',
@@ -1218,8 +1231,8 @@ const TRANSLATIONS = {
 'en': {
   pageTitle:'Lichiun Medical — Patient Intake', subtitle:'Please fill in the information below to help the doctor understand your needs',
   sectionBasic:'Basic Information', sectionSpecial:'Special Requests', sectionSymptoms:'Please check your symptoms', sectionOtherQ:'Other Questions',
-  labelClinic:'Clinic', labelPatientId:'Patient No.', labelName:'Name', labelWeight:'Weight',
-  optionalTag:'(optional)', weightUnit:'(kg)', optSelect:'Select',
+  labelClinic:'Clinic', labelPatientId:'Patient No.', labelName:'Name', labelHeight:'Height', labelWeight:'Weight',
+  optionalTag:'(optional)', heightUnit:'(cm)', weightUnit:'(kg)', optSelect:'Select',
   optClinic1:'Clinic 1', optClinic2:'Clinic 2', optClinic3:'Clinic 3',
   phPatientId:'Enter patient number if available', phName:'Enter your name',
   labelDocs:'Documents needed', optDiagnosis:'📄 Diagnosis Certificate', optMedCert:'📄 Medical Visit Certificate',
@@ -1247,6 +1260,7 @@ const TRANSLATIONS = {
   visitReturn:'Returning Patient', visitReturnDesc:'Go to intake form directly',
   consentHeader:'Data Collection Notice', consentSubtitle:'Personal Data Collection Notice',
   consentTitle:'Personal Data Protection Act Notice',
+  consentBody:'In accordance with the Personal Data Protection Act, our clinic collects your personal data and hereby informs you of the following:<br><br><b>1. Purpose of Collection:</b><br>Medical and health management, registration and consultation services.<br><br><b>2. Categories of Data:</b><br>Basic information including name, ID number, date of birth, phone, and address, as well as medical records and visit history.<br><br><b>3. Period, Region, Recipients, and Methods of Use:</b><br>• Period: During the clinic\'s operation or as required by law.<br>• Region: Within the Republic of China (Taiwan).<br>• Recipients: This clinic and authorities required by law (e.g., NHIA).<br>• Methods: Written, electronic, or other lawful means.<br><br><b>4. Your Rights:</b><br>Under Article 3 of the Act, you may inquire, review, request copies, supplement, correct, request to stop collection/processing/use, or request deletion.<br><br><b>5. Consequences of Not Providing Data:</b><br>Refusal to provide the above data may affect our ability to deliver complete medical services.',
   consentDecline:'Decline', consentAgree:'I have read and agree',
   regHeader:'New Patient Registration', regSubtitle:'Please fill in your details for registration',
   regSectionTitle:'Personal Information',
@@ -1260,8 +1274,8 @@ const TRANSLATIONS = {
 'vi': {
   pageTitle:'Lichiun Medical — Phiếu khám bệnh', subtitle:'Vui lòng điền thông tin dưới đây để bác sĩ hiểu nhu cầu của bạn',
   sectionBasic:'Thông tin cơ bản', sectionSpecial:'Yêu cầu đặc biệt', sectionSymptoms:'Vui lòng chọn triệu chứng', sectionOtherQ:'Câu hỏi khác',
-  labelClinic:'Phòng khám', labelPatientId:'Số thứ tự', labelName:'Họ tên', labelWeight:'Cân nặng',
-  optionalTag:'(không bắt buộc)', weightUnit:'(kg)', optSelect:'Chọn',
+  labelClinic:'Phòng khám', labelPatientId:'Số thứ tự', labelName:'Họ tên', labelHeight:'Chiều cao', labelWeight:'Cân nặng',
+  optionalTag:'(không bắt buộc)', heightUnit:'(cm)', weightUnit:'(kg)', optSelect:'Chọn',
   optClinic1:'Phòng 1', optClinic2:'Phòng 2', optClinic3:'Phòng 3',
   phPatientId:'Nhập số thứ tự nếu có', phName:'Nhập họ tên',
   labelDocs:'Giấy tờ cần thiết', optDiagnosis:'📄 Giấy chẩn đoán', optMedCert:'📄 Giấy khám bệnh',
@@ -1289,6 +1303,7 @@ const TRANSLATIONS = {
   visitReturn:'Tái khám', visitReturnDesc:'Đi thẳng đến phiếu khám',
   consentHeader:'Thông báo thu thập dữ liệu', consentSubtitle:'Personal Data Collection Notice',
   consentTitle:'Thông báo bảo vệ dữ liệu cá nhân',
+  consentBody:'Theo Luật Bảo vệ Dữ liệu Cá nhân, phòng khám thu thập thông tin cá nhân của bạn và xin thông báo các điều sau:<br><br><b>1. Mục đích thu thập:</b><br>Quản lý y tế và sức khỏe, dịch vụ đăng ký và khám bệnh.<br><br><b>2. Loại dữ liệu:</b><br>Họ tên, số CCCD, ngày sinh, điện thoại, địa chỉ và các thông tin y tế như bệnh án, hồ sơ khám bệnh.<br><br><b>3. Thời gian, khu vực, đối tượng và phương thức sử dụng:</b><br>• Thời gian: Trong thời gian phòng khám hoạt động hoặc theo quy định pháp luật.<br>• Khu vực: Trong lãnh thổ Đài Loan (Trung Hoa Dân Quốc).<br>• Đối tượng: Phòng khám và các cơ quan theo yêu cầu pháp luật (như Cục BHYT).<br>• Phương thức: Văn bản, điện tử hoặc các phương thức hợp pháp khác.<br><br><b>4. Quyền của bạn:</b><br>Theo Điều 3 của Luật, bạn có quyền tra cứu, xem, yêu cầu sao chép, bổ sung, sửa đổi, ngừng thu thập/xử lý/sử dụng hoặc yêu cầu xóa.<br><br><b>5. Ảnh hưởng nếu không cung cấp:</b><br>Việc không cung cấp dữ liệu có thể ảnh hưởng đến khả năng cung cấp dịch vụ y tế đầy đủ của phòng khám.',
   consentDecline:'Không đồng ý', consentAgree:'Tôi đã đọc và đồng ý',
   regHeader:'Đăng ký bệnh nhân mới', regSubtitle:'Vui lòng điền thông tin để đăng ký',
   regSectionTitle:'Thông tin cá nhân',
@@ -1302,8 +1317,8 @@ const TRANSLATIONS = {
 'th': {
   pageTitle:'Lichiun Medical — แบบสอบถามผู้ป่วย', subtitle:'กรุณากรอกข้อมูลด้านล่างเพื่อช่วยให้แพทย์เข้าใจความต้องการของคุณ',
   sectionBasic:'ข้อมูลพื้นฐาน', sectionSpecial:'คำขอพิเศษ', sectionSymptoms:'กรุณาเลือกอาการของคุณ', sectionOtherQ:'คำถามอื่นๆ',
-  labelClinic:'ห้องตรวจ', labelPatientId:'เลขที่', labelName:'ชื่อ-นามสกุล', labelWeight:'น้ำหนัก',
-  optionalTag:'(ไม่บังคับ)', weightUnit:'(กก.)', optSelect:'เลือก',
+  labelClinic:'ห้องตรวจ', labelPatientId:'เลขที่', labelName:'ชื่อ-นามสกุล', labelHeight:'ส่วนสูง', labelWeight:'น้ำหนัก',
+  optionalTag:'(ไม่บังคับ)', heightUnit:'(ซม.)', weightUnit:'(กก.)', optSelect:'เลือก',
   optClinic1:'ห้อง 1', optClinic2:'ห้อง 2', optClinic3:'ห้อง 3',
   phPatientId:'กรอกเลขที่ถ้ามี', phName:'กรอกชื่อ-นามสกุล',
   labelDocs:'เอกสารที่ต้องการ', optDiagnosis:'📄 ใบรับรองแพทย์', optMedCert:'📄 ใบรับรองการรักษา',
@@ -1331,6 +1346,7 @@ const TRANSLATIONS = {
   visitReturn:'ผู้ป่วยเก่า', visitReturnDesc:'ไปที่แบบสอบถามโดยตรง',
   consentHeader:'แจ้งเก็บข้อมูล', consentSubtitle:'Personal Data Collection Notice',
   consentTitle:'ประกาศการคุ้มครองข้อมูลส่วนบุคคล',
+  consentBody:'ตามกฎหมายคุ้มครองข้อมูลส่วนบุคคล คลินิกของเราเก็บข้อมูลส่วนบุคคลของท่าน และขอแจ้งให้ทราบดังนี้:<br><br><b>1. วัตถุประสงค์การเก็บข้อมูล:</b><br>การจัดการทางการแพทย์และสุขภาพ การลงทะเบียนและการรักษาพยาบาล<br><br><b>2. ประเภทข้อมูล:</b><br>ชื่อ-นามสกุล เลขบัตรประชาชน วันเกิด เบอร์โทร ที่อยู่ และข้อมูลทางการแพทย์ เช่น เวชระเบียน ประวัติการรักษา<br><br><b>3. ระยะเวลา พื้นที่ ผู้รับ และวิธีการใช้:</b><br>• ระยะเวลา: ตลอดระยะเวลาที่คลินิกดำเนินการหรือตามที่กฎหมายกำหนด<br>• พื้นที่: ในเขตประเทศไต้หวัน (สาธารณรัฐจีน)<br>• ผู้รับ: คลินิกและหน่วยงานที่กฎหมายกำหนด (เช่น สำนักงานประกันสุขภาพ)<br>• วิธีการ: เป็นลายลักษณ์อักษร อิเล็กทรอนิกส์ หรือวิธีการอื่นที่ถูกต้องตามกฎหมาย<br><br><b>4. สิทธิของท่าน:</b><br>ตามมาตรา 3 ของกฎหมาย ท่านสามารถสอบถาม ดู ขอสำเนา เพิ่มเติม แก้ไข ขอให้หยุดเก็บ/ประมวลผล/ใช้ หรือขอให้ลบข้อมูลได้<br><br><b>5. ผลของการไม่ให้ข้อมูล:</b><br>หากท่านไม่ให้ข้อมูลข้างต้น อาจส่งผลต่อความสามารถของคลินิกในการให้บริการทางการแพทย์ที่ครบถ้วน',
   consentDecline:'ไม่ยินยอม', consentAgree:'ฉันได้อ่านและยินยอม',
   regHeader:'ลงทะเบียนผู้ป่วยใหม่', regSubtitle:'กรุณากรอกข้อมูลเพื่อลงทะเบียน',
   regSectionTitle:'ข้อมูลส่วนตัว',
@@ -1344,8 +1360,8 @@ const TRANSLATIONS = {
 'id': {
   pageTitle:'Lichiun Medical — Formulir Pasien', subtitle:'Silakan isi informasi di bawah ini untuk membantu dokter memahami kebutuhan Anda',
   sectionBasic:'Informasi Dasar', sectionSpecial:'Permintaan Khusus', sectionSymptoms:'Silakan pilih gejala Anda', sectionOtherQ:'Pertanyaan Lain',
-  labelClinic:'Klinik', labelPatientId:'No. Pasien', labelName:'Nama', labelWeight:'Berat badan',
-  optionalTag:'(opsional)', weightUnit:'(kg)', optSelect:'Pilih',
+  labelClinic:'Klinik', labelPatientId:'No. Pasien', labelName:'Nama', labelHeight:'Tinggi badan', labelWeight:'Berat badan',
+  optionalTag:'(opsional)', heightUnit:'(cm)', weightUnit:'(kg)', optSelect:'Pilih',
   optClinic1:'Klinik 1', optClinic2:'Klinik 2', optClinic3:'Klinik 3',
   phPatientId:'Masukkan nomor pasien jika ada', phName:'Masukkan nama Anda',
   labelDocs:'Dokumen diperlukan', optDiagnosis:'📄 Surat diagnosis', optMedCert:'📄 Surat keterangan berobat',
@@ -1373,6 +1389,7 @@ const TRANSLATIONS = {
   visitReturn:'Pasien Lama', visitReturnDesc:'Langsung ke formulir',
   consentHeader:'Pemberitahuan Pengumpulan Data', consentSubtitle:'Personal Data Collection Notice',
   consentTitle:'Pemberitahuan Perlindungan Data Pribadi',
+  consentBody:'Sesuai dengan Undang-Undang Perlindungan Data Pribadi, klinik kami mengumpulkan data pribadi Anda dan dengan ini memberitahukan hal-hal berikut:<br><br><b>1. Tujuan Pengumpulan:</b><br>Manajemen medis dan kesehatan, layanan pendaftaran dan konsultasi.<br><br><b>2. Kategori Data:</b><br>Nama, nomor identitas, tanggal lahir, telepon, alamat, serta data medis seperti rekam medis dan riwayat kunjungan.<br><br><b>3. Periode, Wilayah, Penerima, dan Metode Penggunaan:</b><br>• Periode: Selama klinik beroperasi atau sesuai ketentuan hukum.<br>• Wilayah: Dalam wilayah Republik Tiongkok (Taiwan).<br>• Penerima: Klinik ini dan instansi yang diwajibkan oleh hukum (seperti BPJS setempat).<br>• Metode: Tertulis, elektronik, atau cara lain yang sah.<br><br><b>4. Hak Anda:</b><br>Berdasarkan Pasal 3 Undang-Undang, Anda dapat memeriksa, melihat, meminta salinan, melengkapi, mengoreksi, meminta penghentian pengumpulan/pemrosesan/penggunaan, atau meminta penghapusan.<br><br><b>5. Akibat Tidak Memberikan Data:</b><br>Jika Anda menolak memberikan data di atas, dapat memengaruhi kemampuan klinik memberikan layanan medis yang lengkap.',
   consentDecline:'Tidak setuju', consentAgree:'Saya telah membaca dan setuju',
   regHeader:'Pendaftaran Pasien Baru', regSubtitle:'Silakan isi data untuk pendaftaran',
   regSectionTitle:'Informasi Pribadi',
@@ -1394,8 +1411,8 @@ function setLanguage(lang) {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.dataset.i18n;
     if (t[key] !== undefined) {
-      if (key === 'tyMsg') {
-        el.innerHTML = t[key];  // allow <br>
+      if (key === 'tyMsg' || key === 'consentBody') {
+        el.innerHTML = t[key];  // allow <br> and <b>
       } else {
         el.textContent = t[key];
       }
@@ -1593,6 +1610,7 @@ function setLanguage(lang) {
       clinic: document.getElementById('clinic').value,
       name: document.getElementById('name').value.trim(),
       patientId: document.getElementById('patientId').value.trim(),
+      height: document.getElementById('height').value.trim(),
       weight: document.getElementById('weight').value.trim(),
       docs: [],
       medPreference: '',
@@ -1677,6 +1695,7 @@ function setLanguage(lang) {
           clinic: data.clinic,
           name: data.name,
           patientId: data.patientId,
+          height: data.height,
           weight: data.weight,
           docs: data.docs.join('、'),
           medPreference: data.medPreference,
