@@ -73,6 +73,16 @@ function doPost(e) {
     const raw = e.postData.contents;
     const data = JSON.parse(raw);
 
+    // 地址翻譯：非繁中填寫時，自動翻成繁中（覆蓋原文）
+    if (data.address && data.language && data.language !== 'zh-Hant') {
+      try {
+        const translated = LanguageApp.translate(data.address, '', 'zh-TW');
+        if (translated) data.address = translated;
+      } catch (err) {
+        // 翻譯失敗保留原文，不中斷送單
+      }
+    }
+
     // 按照 HEADERS 順序組成一列
     const row = HEADERS.map(key => data[key] || '');
 
