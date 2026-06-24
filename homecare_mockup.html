@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>立群醫療體系 — 居家醫療需求申請（Mockup）</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  :root{
+    --teal-800:#115E59; --teal-700:#0F766E; --teal-600:#0E7490; --teal-100:#CCFBF1; --teal-50:#F0FDFA;
+    --slate-900:#0F172A; --slate-700:#334155; --slate-500:#64748B; --slate-400:#94A3B8;
+    --slate-300:#CBD5E1; --slate-200:#E2E8F0; --slate-100:#F1F5F9; --slate-50:#F8FAFC;
+    --white:#FFF; --amber-500:#F59E0B; --amber-50:#FFFBEB; --rose-500:#F43F5E;
+  }
+  body{
+    font-family:'Noto Sans TC',-apple-system,'Segoe UI',sans-serif;
+    background:linear-gradient(180deg,var(--teal-600) 0%,var(--teal-800) 240px,var(--slate-100) 240px);
+    min-height:100vh; color:var(--slate-900); -webkit-font-smoothing:antialiased; padding-bottom:40px;
+  }
+  .wrap{max-width:520px; margin:0 auto;}
+  .header{position:relative; padding:32px 24px 22px; text-align:center; overflow:hidden;}
+  .header::before{content:''; position:absolute; top:-60px; right:-40px; width:200px; height:200px;
+    border-radius:50%; background:rgba(255,255,255,.06);}
+  .logo-img{width:60px; height:60px; border-radius:15px; background:var(--white); padding:4px;
+    box-shadow:0 8px 32px rgba(0,0,0,.15); margin-bottom:12px; object-fit:contain;}
+  .header h1{color:#fff; font-size:1.32rem; font-weight:700; letter-spacing:.5px;}
+  .header .sub{color:rgba(255,255,255,.85); font-size:.86rem; margin-top:6px;}
+
+  /* router */
+  .choices{padding:8px 20px 0;}
+  .choice{background:var(--white); border-radius:18px; padding:22px 20px; margin-bottom:16px;
+    box-shadow:0 6px 24px rgba(15,23,42,.08); display:flex; align-items:center; gap:16px; cursor:pointer;
+    border:2px solid transparent; transition:.15s;}
+  .choice:active{transform:scale(.98);}
+  .choice:hover{border-color:var(--teal-100);}
+  .choice .ic{width:54px; height:54px; border-radius:14px; display:flex; align-items:center;
+    justify-content:center; font-size:1.7rem; flex-shrink:0;}
+  .choice .ic.a{background:var(--teal-50);}
+  .choice .ic.b{background:var(--amber-50);}
+  .choice .t{font-size:1.08rem; font-weight:700; color:var(--slate-900);}
+  .choice .d{font-size:.82rem; color:var(--slate-500); margin-top:3px; line-height:1.5;}
+
+  /* card */
+  .card{background:var(--white); margin:8px 16px; border-radius:18px; padding:22px 20px;
+    box-shadow:0 6px 24px rgba(15,23,42,.08);}
+  .card-title{font-size:1.05rem; font-weight:700; color:var(--teal-700); margin-bottom:14px;
+    display:flex; align-items:center; gap:8px;}
+  .consent-text{font-size:.82rem; color:var(--slate-700); line-height:1.75; max-height:42vh;
+    overflow-y:auto; background:var(--slate-50); border-radius:12px; padding:14px; border:1px solid var(--slate-200);}
+  .btn-row{display:flex; gap:12px; margin-top:18px;}
+  .btn{flex:1; padding:15px; border:none; border-radius:13px; font-size:1rem; font-weight:700;
+    font-family:inherit; cursor:pointer; transition:.15s;}
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:var(--teal-600); color:#fff; box-shadow:0 6px 18px rgba(14,116,144,.35);}
+  .btn-ghost{background:var(--slate-100); color:var(--slate-500);}
+
+  /* form */
+  .section{margin:0 16px 16px; background:var(--white); border-radius:18px; padding:20px;
+    box-shadow:0 6px 24px rgba(15,23,42,.08);}
+  .section-title{font-size:.98rem; font-weight:700; color:var(--slate-900); margin-bottom:16px;
+    display:flex; align-items:center; gap:8px; padding-bottom:12px; border-bottom:2px solid var(--slate-100);}
+  .field{margin-bottom:15px;}
+  .field:last-child{margin-bottom:0;}
+  .field > label{display:block; font-size:.86rem; font-weight:500; color:var(--slate-700); margin-bottom:7px;}
+  .req{color:var(--rose-500); margin-left:3px;}
+  .sugg{font-size:.66rem; background:var(--amber-50); color:var(--amber-500); border:1px solid #FDE68A;
+    padding:1px 7px; border-radius:99px; margin-left:6px; font-weight:700; vertical-align:middle;}
+  input[type=text], input[type=tel], input[type=date], textarea{
+    width:100%; padding:13px 14px; border:1.5px solid var(--slate-200); border-radius:12px;
+    font-size:.95rem; font-family:inherit; color:var(--slate-900); background:var(--slate-50); transition:.15s;}
+  input:focus, textarea:focus{outline:none; border-color:var(--teal-600); background:#fff;
+    box-shadow:0 0 0 3px rgba(14,116,144,.1);}
+  textarea{resize:vertical; min-height:72px;}
+  .two{display:flex; gap:10px;}
+  .two > .field{flex:1; margin-bottom:0;}
+  .chips{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{padding:9px 15px; border:1.5px solid var(--slate-200); border-radius:99px; background:var(--slate-50);
+    font-size:.86rem; color:var(--slate-700); cursor:pointer; transition:.12s; user-select:none;}
+  .chip.on{background:var(--teal-600); color:#fff; border-color:var(--teal-600);
+    box-shadow:0 4px 12px rgba(14,116,144,.3);}
+  .note{font-size:.74rem; color:var(--slate-400); margin-top:6px; line-height:1.5;}
+  .submit{margin:4px 16px 0; }
+  .submit .btn-primary{width:100%; padding:16px;}
+
+  /* thank you */
+  .thanks{text-align:center; padding:50px 30px;}
+  .thanks .big{font-size:3.4rem; margin-bottom:16px;}
+  .thanks h2{font-size:1.35rem; color:var(--teal-700); margin-bottom:12px;}
+  .thanks p{font-size:.95rem; color:var(--slate-500); line-height:1.8;}
+
+  .footer{text-align:center; font-size:.72rem; color:var(--slate-400); padding:22px;}
+  /* back button */
+  .back-btn{position:absolute; top:24px; left:18px; z-index:5; background:rgba(255,255,255,.18);
+    color:#fff; border:none; border-radius:99px; padding:8px 14px 8px 10px; font-size:.85rem;
+    font-weight:500; font-family:inherit; cursor:pointer; display:flex; align-items:center; gap:3px;
+    backdrop-filter:blur(4px); transition:.15s;}
+  .back-btn:active{transform:scale(.94);}
+  /* select */
+  select{width:100%; padding:13px 14px; border:1.5px solid var(--slate-200); border-radius:12px;
+    font-size:.95rem; font-family:inherit; color:var(--slate-900); background:var(--slate-50);
+    -webkit-appearance:none; appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2364748B' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 14px center;}
+  select:focus{outline:none; border-color:var(--teal-600); background-color:#fff;}
+  /* photo upload */
+  .photo-zone{border:2px dashed var(--slate-300); border-radius:14px; padding:22px 16px; text-align:center;
+    background:var(--slate-50); cursor:pointer; transition:.15s;}
+  .photo-zone:active{background:var(--teal-50); border-color:var(--teal-600);}
+  .photo-zone .pic{font-size:2rem;}
+  .photo-zone .pt{font-size:.9rem; font-weight:600; color:var(--slate-700); margin-top:6px;}
+  .photo-zone .ps{font-size:.74rem; color:var(--slate-400); margin-top:3px;}
+  .thumbs{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;}
+  .thumb{width:72px; height:72px; border-radius:10px; object-fit:cover; border:1.5px solid var(--slate-200);}
+  .hidden{display:none;}
+  .mock-tag{position:fixed; top:8px; left:8px; background:var(--rose-500); color:#fff; font-size:.66rem;
+    font-weight:700; padding:3px 9px; border-radius:99px; z-index:99; opacity:.85;}
+</style>
+</head>
+<body>
+<div class="mock-tag">MOCKUP · 未接後端</div>
+<div class="wrap">
+
+<!-- ① 入口分流 -->
+<section id="s-router">
+  <div class="header">
+    <img src="logo.png" class="logo-img" alt="立群" onerror="this.style.display='none'">
+    <h1>立群醫療體系</h1>
+    <div class="sub">請選擇您要辦理的項目</div>
+  </div>
+  <div class="choices">
+    <div class="choice" onclick="alert('（Mockup）此處走現有問診流程，本次不改動')">
+      <div class="ic a">📋</div>
+      <div><div class="t">看診問診填寫</div><div class="d">初診 / 複診，看診前填寫問診表</div></div>
+    </div>
+    <div class="choice" onclick="go('s-consent')">
+      <div class="ic b">🏠</div>
+      <div><div class="t">居家醫療需求申請</div><div class="d">行動不便、需到府醫療服務（抽血／慢箋／傷口換藥等）</div></div>
+    </div>
+  </div>
+  <div class="footer">立群醫療體系 &copy; 2026</div>
+</section>
+
+<!-- ② 個資同意 -->
+<section id="s-consent" class="hidden">
+  <div class="header">
+    <button class="back-btn" onclick="go('s-router')">‹ 返回</button>
+    <img src="logo.png" class="logo-img" alt="立群" onerror="this.style.display='none'">
+    <h1>個人資料蒐集告知</h1>
+    <div class="sub">居家醫療照護評估與聯繫</div>
+  </div>
+  <div class="card">
+    <div class="card-title">📄 個人資料保護法告知事項</div>
+    <div class="consent-text">
+      依據「個人資料保護法」規定，本診所為提供<b>居家醫療照護評估與聯繫服務</b>蒐集您的個人資料，謹向您告知：<br><br>
+      <b>一、蒐集目的：</b>居家醫療收案評估、聯繫安排到府服務、健保居家醫療照護整合計畫申請。<br><br>
+      <b>二、蒐集類別：</b>病人姓名、身分證字號、出生年月日、聯絡電話、居住地址、居住狀況、社會福利身分別、主要聯絡人等。<br><br>
+      <b>三、利用期間/地區/對象/方式：</b>本診所營運期間、中華民國境內、本診所及依法應配合機關（如健保署），以合法方式利用。<br><br>
+      <b>四、您的權利：</b>得依個資法第 3 條行使查詢、閱覽、複製、補充更正、停止利用或刪除。<br><br>
+      <b>五、不提供之影響：</b>可能影響本診所評估及提供居家醫療服務之能力。
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="go('s-router')">不同意</button>
+      <button class="btn btn-primary" onclick="go('s-form')">我已閱讀並同意</button>
+    </div>
+  </div>
+  <div class="footer">立群醫療體系 &copy; 2026</div>
+</section>
+
+<!-- ③ 居家申請表 -->
+<section id="s-form" class="hidden">
+  <div class="header">
+    <button class="back-btn" onclick="go('s-consent')">‹ 返回</button>
+    <img src="logo.png" class="logo-img" alt="立群" onerror="this.style.display='none'">
+    <h1>居家醫療需求申請</h1>
+    <div class="sub">填寫後將有專人盡快與您聯絡</div>
+  </div>
+
+  <!-- 申請院區 -->
+  <div class="section">
+    <div class="section-title">🏥 申請院區</div>
+    <div class="field">
+      <label>希望服務／申請院區<span class="req">*</span></label>
+      <select>
+        <option value="">請選擇</option>
+        <option>立群診所</option>
+        <option>義群診所</option>
+        <option>仁群診所</option>
+        <option>智群診所</option>
+        <option>佳群診所</option>
+        <option>聖群診所</option>
+        <option>不確定／由專人安排</option>
+      </select>
+      <div class="note">※ 在診所現場掃碼或在外由家屬掃碼皆適用，請自行選擇就近院區。</div>
+    </div>
+  </div>
+
+  <!-- 病人基本資料 -->
+  <div class="section">
+    <div class="section-title">👤 病人基本資料</div>
+    <div class="field">
+      <label>病人姓名<span class="req">*</span></label>
+      <input type="text" placeholder="請輸入病人姓名">
+    </div>
+    <div class="field">
+      <label>性別</label>
+      <div class="chips" data-single>
+        <div class="chip" onclick="pick(this)">男</div>
+        <div class="chip" onclick="pick(this)">女</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>身分證號</label>
+      <input type="text" placeholder="A123456789" maxlength="10">
+    </div>
+    <div class="field">
+      <label>出生日期</label>
+      <input type="date">
+    </div>
+    <div class="two">
+      <div class="field"><label>電話（日）</label><input type="tel" placeholder="日間聯絡"></div>
+      <div class="field"><label>電話（夜）</label><input type="tel" placeholder="夜間聯絡"></div>
+    </div>
+    <div class="field" style="margin-top:15px;">
+      <label>居住地址</label>
+      <input type="text" placeholder="實際居住地址（到府服務用）">
+    </div>
+    <div class="field">
+      <label>居住狀況</label>
+      <div class="chips" data-single>
+        <div class="chip" onclick="pick(this)">獨居</div>
+        <div class="chip" onclick="pick(this)">家人同住</div>
+        <div class="chip" onclick="pick(this)">親友同住</div>
+        <div class="chip" onclick="pick(this)">其他</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>常用語言</label>
+      <div class="chips" data-single>
+        <div class="chip" onclick="pick(this)">國語</div>
+        <div class="chip" onclick="pick(this)">台語</div>
+        <div class="chip" onclick="pick(this)">客家語</div>
+        <div class="chip" onclick="pick(this)">原住民族語</div>
+        <div class="chip" onclick="pick(this)">其他</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>社會福利身分別</label>
+      <div class="chips" data-single>
+        <div class="chip" onclick="pick(this)">無</div>
+        <div class="chip" onclick="pick(this)">低收入戶</div>
+        <div class="chip" onclick="pick(this)">中低收入戶</div>
+        <div class="chip" onclick="pick(this)">榮民</div>
+        <div class="chip" onclick="pick(this)">原住民</div>
+        <div class="chip" onclick="pick(this)">領有身心障礙證明</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主要聯絡人 -->
+  <div class="section">
+    <div class="section-title">📞 主要聯絡人</div>
+    <div class="field"><label>姓名</label><input type="text" placeholder="主要聯絡人姓名"></div>
+    <div class="field"><label>與病人關係</label><input type="text" placeholder="如：兒子、配偶、看護"></div>
+    <div class="field"><label>聯絡電話／手機<span class="req">*</span></label><input type="tel" placeholder="方便聯繫的號碼"></div>
+  </div>
+
+  <!-- 申請說明 -->
+  <div class="section">
+    <div class="section-title">📝 申請說明</div>
+    <div class="field">
+      <label>申請原因／需求簡述</label>
+      <textarea placeholder="例如：長輩中風行動不便，需定期到府抽血與換藥"></textarea>
+    </div>
+    <div class="field">
+      <label>希望聯絡時段</label>
+      <div class="chips" data-single>
+        <div class="chip" onclick="pick(this)">上午</div>
+        <div class="chip" onclick="pick(this)">下午</div>
+        <div class="chip" onclick="pick(this)">晚上</div>
+        <div class="chip" onclick="pick(this)">皆可</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 慢性處方箋拍照（選填） -->
+  <div class="section">
+    <div class="section-title">📎 慢性處方箋拍照（選填）</div>
+    <div class="photo-zone" onclick="document.getElementById('rxFile').click()">
+      <div class="pic">📷</div>
+      <div class="pt">點此拍照或上傳慢箋</div>
+      <div class="ps">可拍多張（多頁處方箋），照片僅供承辦人員評估用</div>
+    </div>
+    <input type="file" id="rxFile" accept="image/*" capture="environment" multiple class="hidden" onchange="addPhotos(this)">
+    <div class="thumbs" id="rxThumbs"></div>
+  </div>
+
+  <div class="submit">
+    <button class="btn btn-primary" onclick="go('s-thanks')">送出申請</button>
+  </div>
+  <div class="footer">立群醫療體系 &copy; 2026 — 您的資料僅供居家醫療評估使用</div>
+</section>
+
+<!-- ④ 感謝頁 -->
+<section id="s-thanks" class="hidden">
+  <div class="thanks">
+    <div class="big">✅</div>
+    <h2>已收到您的申請</h2>
+    <p>專人將盡快與您電話聯絡，<br>說明居家醫療服務內容與後續安排。<br><br>感謝您的填寫 🙏</p>
+  </div>
+  <div class="footer">立群醫療體系 &copy; 2026</div>
+</section>
+
+</div>
+<script>
+  function go(id){
+    document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+    window.scrollTo(0,0);
+  }
+  function pick(el){
+    const box=el.parentElement;
+    box.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+    el.classList.add('on');
+  }
+  function addPhotos(input){
+    const box=document.getElementById('rxThumbs');
+    [...input.files].forEach(f=>{
+      const img=document.createElement('img');
+      img.className='thumb';
+      img.src=URL.createObjectURL(f);
+      box.appendChild(img);
+    });
+  }
+</script>
+</body>
+</html>
