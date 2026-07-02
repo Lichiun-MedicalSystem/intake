@@ -1829,6 +1829,40 @@ function setLanguage(lang) {
   }
   window.hcPick = hcPick;
 
+  // ── 慢箋照片：壓縮到最長邊 1280、JPEG 0.7，存 dataURL ──
+  let hcPhotos = [];
+  window.hcPhotos = hcPhotos;
+  function addHcPhotos(input) {
+    const box = document.getElementById('rxThumbs');
+    [...input.files].forEach(file => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = new Image();
+        img.onload = () => {
+          const max = 1280;
+          let w = img.width, h = img.height;
+          if (w > max || h > max) {
+            if (w >= h) { h = Math.round(h * max / w); w = max; }
+            else { w = Math.round(w * max / h); h = max; }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          hcPhotos.push(dataUrl);
+          const thumb = document.createElement('img');
+          thumb.className = 'hc-thumb';
+          thumb.src = dataUrl;
+          box.appendChild(thumb);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+    input.value = ''; // 允許重複選同一檔
+  }
+  window.addHcPhotos = addHcPhotos;
+
   // ── 初診/複診選擇 ──
   document.getElementById('choiceNew').addEventListener('click', () => {
     isNewPatient = true;

@@ -41,3 +41,14 @@ test('居家 chip 單選：點擊後 data-value 更新且互斥', async ({ page 
   await expect(grp).toHaveAttribute('data-value', '女');
   await expect(grp.locator('.hc-chip.on')).toHaveCount(1);
 });
+
+test('慢箋：選圖後出現縮圖且 hcPhotos 累積', async ({ page }) => {
+  await page.goto(FORM);
+  await page.locator('#routerHomecare').click();
+  await page.locator('#hcConsent').getByText('我已閱讀並同意').click();
+  const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==','base64');
+  await page.locator('#rxFile').setInputFiles({ name:'rx.png', mimeType:'image/png', buffer: png });
+  await expect(page.locator('#rxThumbs .hc-thumb')).toHaveCount(1);
+  await expect.poll(() => page.evaluate(() => window.hcPhotos.length)).toBe(1);
+  await expect.poll(() => page.evaluate(() => window.hcPhotos[0].startsWith('data:image/jpeg'))).toBe(true);
+});
