@@ -750,6 +750,122 @@
     .lang-selector { gap: 4px; padding: 0 4px; }
     .lang-btn { padding: 4px 9px; font-size: 11px; border-radius: 14px; }
   }
+
+  /* ═══════════════════════════════════════════════════════
+     居家醫療需求申請（Home-care）— 獨立命名空間，全部規則
+     皆以 #hcRoot 為前綴，class 皆加 hc- 前綴，避免與問診表單樣式衝突
+     ═══════════════════════════════════════════════════════ */
+  #hcRoot .hc-choices { padding: 8px 20px 0; }
+  #hcRoot .hc-choice {
+    background: var(--white); border-radius: 18px; padding: 22px 20px; margin-bottom: 16px;
+    box-shadow: 0 6px 24px rgba(15,23,42,.08); display: flex; align-items: center; gap: 16px;
+    cursor: pointer; border: 2px solid transparent; transition: .15s;
+  }
+  #hcRoot .hc-choice:active { transform: scale(.98); }
+  #hcRoot .hc-choice:hover { border-color: var(--teal-100); }
+  #hcRoot .hc-choice .ic {
+    width: 54px; height: 54px; border-radius: 14px; display: flex; align-items: center;
+    justify-content: center; font-size: 1.7rem; flex-shrink: 0;
+  }
+  #hcRoot .hc-choice .ic.a { background: var(--teal-50); }
+  #hcRoot .hc-choice .ic.b { background: var(--amber-50); }
+  #hcRoot .hc-choice .t { font-size: 1.08rem; font-weight: 700; color: var(--slate-900); }
+  #hcRoot .hc-choice .d { font-size: .82rem; color: var(--slate-500); margin-top: 3px; line-height: 1.5; }
+
+  #hcRoot .hc-back {
+    position: absolute; top: 24px; left: 18px; z-index: 5; background: rgba(255,255,255,.18);
+    color: #fff; border: none; border-radius: 99px; padding: 8px 14px 8px 10px; font-size: .85rem;
+    font-weight: 500; font-family: inherit; cursor: pointer; display: flex; align-items: center; gap: 3px;
+    backdrop-filter: blur(4px); transition: .15s;
+  }
+  #hcRoot .hc-back:active { transform: scale(.94); }
+
+  #hcRoot select {
+    width: 100%; padding: 13px 14px; border: 1.5px solid var(--slate-200); border-radius: 12px;
+    font-size: .95rem; font-family: inherit; color: var(--slate-900); background: var(--slate-50);
+    -webkit-appearance: none; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2364748B' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center;
+  }
+  #hcRoot select:focus { outline: none; border-color: var(--teal-600); background-color: #fff; }
+
+  #hcRoot .hc-photo-zone {
+    border: 2px dashed var(--slate-300); border-radius: 14px; padding: 22px 16px; text-align: center;
+    background: var(--slate-50); cursor: pointer; transition: .15s;
+  }
+  #hcRoot .hc-photo-zone:active { background: var(--teal-50); border-color: var(--teal-600); }
+  #hcRoot .hc-photo-zone .pic { font-size: 2rem; }
+  #hcRoot .hc-photo-zone .pt { font-size: .9rem; font-weight: 600; color: var(--slate-700); margin-top: 6px; }
+  #hcRoot .hc-photo-zone .ps { font-size: .74rem; color: var(--slate-400); margin-top: 3px; }
+  #hcRoot .hc-thumbs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  #hcRoot .hc-thumb { width: 72px; height: 72px; border-radius: 10px; object-fit: cover; border: 1.5px solid var(--slate-200); }
+
+  #hcRoot .hc-card {
+    background: var(--white); margin: 8px 16px; border-radius: 18px; padding: 22px 20px;
+    box-shadow: 0 6px 24px rgba(15,23,42,.08);
+  }
+  #hcRoot .hc-card-title {
+    font-size: 1.05rem; font-weight: 700; color: var(--teal-700); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  #hcRoot .hc-consent-text {
+    font-size: .82rem; color: var(--slate-700); line-height: 1.75; max-height: 42vh;
+    overflow-y: auto; background: var(--slate-50); border-radius: 12px; padding: 14px;
+    border: 1px solid var(--slate-200);
+  }
+  #hcRoot .hc-btn-row { display: flex; gap: 12px; margin-top: 18px; }
+
+  #hcRoot .hc-btn {
+    flex: 1; padding: 15px; border: none; border-radius: 13px; font-size: 1rem; font-weight: 700;
+    font-family: inherit; cursor: pointer; transition: .15s;
+  }
+  #hcRoot .hc-btn:active { transform: scale(.97); }
+  #hcRoot .hc-btn-primary { background: var(--teal-600); color: #fff; box-shadow: 0 6px 18px rgba(14,116,144,.35); }
+  #hcRoot .hc-btn-ghost { background: var(--slate-100); color: var(--slate-500); }
+
+  #hcRoot .hc-section {
+    margin: 0 16px 16px; background: var(--white); border-radius: 18px; padding: 20px;
+    box-shadow: 0 6px 24px rgba(15,23,42,.08);
+  }
+  #hcRoot .hc-section-title {
+    font-size: .98rem; font-weight: 700; color: var(--slate-900); margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px; padding-bottom: 12px; border-bottom: 2px solid var(--slate-100);
+  }
+  #hcRoot .hc-field { margin-bottom: 15px; }
+  #hcRoot .hc-field:last-child { margin-bottom: 0; }
+  #hcRoot .hc-field > label { display: block; font-size: .86rem; font-weight: 500; color: var(--slate-700); margin-bottom: 7px; }
+  #hcRoot .req { color: var(--rose-500); margin-left: 3px; }
+  #hcRoot input[type=text], #hcRoot input[type=tel], #hcRoot input[type=date], #hcRoot textarea {
+    width: 100%; padding: 13px 14px; border: 1.5px solid var(--slate-200); border-radius: 12px;
+    font-size: .95rem; font-family: inherit; color: var(--slate-900); background: var(--slate-50); transition: .15s;
+  }
+  #hcRoot input:focus, #hcRoot textarea:focus {
+    outline: none; border-color: var(--teal-600); background: #fff; box-shadow: 0 0 0 3px rgba(14,116,144,.1);
+  }
+  #hcRoot textarea { resize: vertical; min-height: 72px; }
+  #hcRoot .hc-two { display: flex; gap: 10px; }
+  #hcRoot .hc-two > .hc-field { flex: 1; margin-bottom: 0; }
+  #hcRoot .hc-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  #hcRoot .hc-chip {
+    padding: 9px 15px; border: 1.5px solid var(--slate-200); border-radius: 99px; background: var(--slate-50);
+    font-size: .86rem; color: var(--slate-700); cursor: pointer; transition: .12s; user-select: none;
+  }
+  #hcRoot .hc-chip.on {
+    background: var(--teal-600); color: #fff; border-color: var(--teal-600);
+    box-shadow: 0 4px 12px rgba(14,116,144,.3);
+  }
+  #hcRoot .hc-note { font-size: .74rem; color: var(--slate-400); margin-top: 6px; line-height: 1.5; }
+  #hcRoot .hc-submit { margin: 4px 16px 0; }
+  #hcRoot .hc-submit .hc-btn-primary { width: 100%; padding: 16px; }
+
+  #hcRoot .hc-thanks { text-align: center; padding: 50px 30px; }
+  #hcRoot .hc-thanks .big { font-size: 3.4rem; margin-bottom: 16px; }
+  #hcRoot .hc-thanks h2 { font-size: 1.35rem; color: var(--teal-700); margin-bottom: 12px; }
+  #hcRoot .hc-thanks p { font-size: .95rem; color: var(--slate-500); line-height: 1.8; }
+
+  /* 通用隱藏（index.html 目前無全域 .hidden，僅各畫面各自的 .xxx.hidden 複合選擇器；
+     hc 三個 <section> 只掛單一 class="hidden"，故補一條全域規則，不重複定義） */
+  .hidden { display: none; }
 </style>
 </head>
 <body>
@@ -1172,6 +1288,184 @@
   <div class="footer" data-i18n="footer">立群醫療體系 &copy; 2026 — 您的資料僅供本次看診使用</div>
 </div>
 
+<!-- ═══ 居家醫療需求申請（Home-care）═══ -->
+<div id="hcRoot">
+
+  <!-- 個資同意 -->
+  <section id="hcConsent" class="hidden">
+    <div class="header">
+      <button class="hc-back" onclick="showScreen('s-router')">‹ 返回</button>
+      <img src="logo.png" alt="立群" class="logo-img">
+      <h1>個人資料蒐集告知</h1>
+      <p class="subtitle">居家醫療照護評估與聯繫</p>
+    </div>
+    <div class="hc-card">
+      <div class="hc-card-title">📄 個人資料保護法告知事項</div>
+      <div class="hc-consent-text">
+        依據「個人資料保護法」規定，本診所為提供<b>居家醫療照護評估與聯繫服務</b>蒐集您的個人資料，謹向您告知：<br><br>
+        <b>一、蒐集目的：</b>居家醫療收案評估、聯繫安排到府服務、健保居家醫療照護整合計畫申請。<br><br>
+        <b>二、蒐集類別：</b>病人姓名、身分證字號、出生年月日、聯絡電話、居住地址、居住狀況、社會福利身分別、主要聯絡人等。<br><br>
+        <b>三、利用期間/地區/對象/方式：</b>本診所營運期間、中華民國境內、本診所及依法應配合機關（如健保署），以合法方式利用。<br><br>
+        <b>四、您的權利：</b>得依個資法第 3 條行使查詢、閱覽、複製、補充更正、停止利用或刪除。<br><br>
+        <b>五、不提供之影響：</b>可能影響本診所評估及提供居家醫療服務之能力。
+      </div>
+      <div class="hc-btn-row">
+        <button class="hc-btn hc-btn-ghost" onclick="showScreen('s-router')">不同意</button>
+        <button class="hc-btn hc-btn-primary" onclick="showScreen('hcForm')">我已閱讀並同意</button>
+      </div>
+    </div>
+    <div class="footer">立群醫療體系 &copy; 2026</div>
+  </section>
+
+  <!-- 居家申請表 -->
+  <section id="hcForm" class="hidden">
+    <div class="header">
+      <button class="hc-back" onclick="showScreen('hcConsent')">‹ 返回</button>
+      <img src="logo.png" alt="立群" class="logo-img">
+      <h1>居家醫療需求申請</h1>
+      <p class="subtitle">填寫後將有專人盡快與您聯絡</p>
+    </div>
+
+    <!-- 申請院區 -->
+    <div class="hc-section">
+      <div class="hc-section-title">🏥 申請院區</div>
+      <div class="hc-field">
+        <label>希望服務／申請院區<span class="req">*</span></label>
+        <select id="hcBranch">
+          <option value="">請選擇</option>
+          <option>立群診所</option>
+          <option>義群診所</option>
+          <option>仁群診所</option>
+          <option>智群診所</option>
+          <option>佳群診所</option>
+          <option>聖群診所</option>
+          <option>不確定／由專人安排</option>
+        </select>
+        <div class="hc-note">※ 在診所現場掃碼或在外由家屬掃碼皆適用，請自行選擇就近院區。</div>
+      </div>
+    </div>
+
+    <!-- 病人基本資料 -->
+    <div class="hc-section">
+      <div class="hc-section-title">👤 病人基本資料</div>
+      <div class="hc-field">
+        <label>病人姓名<span class="req">*</span></label>
+        <input type="text" id="hcPatientName" placeholder="請輸入病人姓名">
+      </div>
+      <div class="hc-field">
+        <label>性別</label>
+        <div class="hc-chips" data-single data-field="sex">
+          <div class="hc-chip" onclick="hcPick(this)">男</div>
+          <div class="hc-chip" onclick="hcPick(this)">女</div>
+        </div>
+      </div>
+      <div class="hc-field">
+        <label>身分證號</label>
+        <input type="text" id="hcNationalId" placeholder="A123456789" maxlength="10">
+      </div>
+      <div class="hc-field">
+        <label>出生日期</label>
+        <input type="date" id="hcBirthday">
+      </div>
+      <div class="hc-two">
+        <div class="hc-field"><label>電話（日）</label><input type="tel" id="hcPhoneDay" placeholder="日間聯絡"></div>
+        <div class="hc-field"><label>電話（夜）</label><input type="tel" id="hcPhoneNight" placeholder="夜間聯絡"></div>
+      </div>
+      <div class="hc-field" style="margin-top:15px;">
+        <label>居住地址</label>
+        <input type="text" id="hcAddress" placeholder="實際居住地址（到府服務用）">
+      </div>
+      <div class="hc-field">
+        <label>居住狀況</label>
+        <div class="hc-chips" data-single data-field="living">
+          <div class="hc-chip" onclick="hcPick(this)">獨居</div>
+          <div class="hc-chip" onclick="hcPick(this)">家人同住</div>
+          <div class="hc-chip" onclick="hcPick(this)">親友同住</div>
+          <div class="hc-chip" onclick="hcPick(this)">其他</div>
+        </div>
+      </div>
+      <div class="hc-field">
+        <label>常用語言</label>
+        <div class="hc-chips" data-single data-field="lang">
+          <div class="hc-chip" onclick="hcPick(this)">國語</div>
+          <div class="hc-chip" onclick="hcPick(this)">台語</div>
+          <div class="hc-chip" onclick="hcPick(this)">客家語</div>
+          <div class="hc-chip" onclick="hcPick(this)">原住民族語</div>
+          <div class="hc-chip" onclick="hcPick(this)">其他</div>
+        </div>
+      </div>
+      <div class="hc-field">
+        <label>社會福利身分別</label>
+        <div class="hc-chips" data-single data-field="welfare">
+          <div class="hc-chip" onclick="hcPick(this)">無</div>
+          <div class="hc-chip" onclick="hcPick(this)">低收入戶</div>
+          <div class="hc-chip" onclick="hcPick(this)">中低收入戶</div>
+          <div class="hc-chip" onclick="hcPick(this)">榮民</div>
+          <div class="hc-chip" onclick="hcPick(this)">原住民</div>
+          <div class="hc-chip" onclick="hcPick(this)">領有身心障礙證明</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 主要聯絡人 -->
+    <div class="hc-section">
+      <div class="hc-section-title">📞 主要聯絡人</div>
+      <div class="hc-field"><label>姓名</label><input type="text" id="hcContactName" placeholder="主要聯絡人姓名"></div>
+      <div class="hc-field"><label>與病人關係</label><input type="text" id="hcContactRelation" placeholder="如：兒子、配偶、看護"></div>
+      <div class="hc-field"><label>聯絡電話／手機<span class="req">*</span></label><input type="tel" id="hcContactPhone" placeholder="方便聯繫的號碼"></div>
+    </div>
+
+    <!-- 申請說明 -->
+    <div class="hc-section">
+      <div class="hc-section-title">📝 申請說明</div>
+      <div class="hc-field">
+        <label>申請原因／需求簡述</label>
+        <textarea id="hcReason" placeholder="例如：長輩中風行動不便，需定期到府抽血與換藥"></textarea>
+      </div>
+      <div class="hc-field">
+        <label>希望聯絡時段</label>
+        <div class="hc-chips" data-single data-field="preferred">
+          <div class="hc-chip" onclick="hcPick(this)">上午</div>
+          <div class="hc-chip" onclick="hcPick(this)">下午</div>
+          <div class="hc-chip" onclick="hcPick(this)">晚上</div>
+          <div class="hc-chip" onclick="hcPick(this)">皆可</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 慢性處方箋拍照（選填） -->
+    <div class="hc-section">
+      <div class="hc-section-title">📎 慢性處方箋拍照（選填）</div>
+      <div class="hc-photo-zone" onclick="document.getElementById('rxFile').click()">
+        <div class="pic">📷</div>
+        <div class="pt">點此拍照或上傳慢箋</div>
+        <div class="ps">可拍多張（多頁處方箋），照片僅供承辦人員評估用</div>
+      </div>
+      <div class="hc-note" style="color:var(--rose-500); font-weight:600;">
+        ⚠️ 請盡量<u>只拍藥物名稱／劑量的部分</u>，避免拍到姓名、身分證等個人資料。
+      </div>
+      <input type="file" id="rxFile" accept="image/*" capture="environment" multiple class="hidden" onchange="addHcPhotos(this)">
+      <div class="hc-thumbs" id="rxThumbs"></div>
+    </div>
+
+    <div class="hc-submit">
+      <button class="hc-btn hc-btn-primary" id="hcSubmitBtn">送出申請</button>
+    </div>
+    <div class="footer">立群醫療體系 &copy; 2026 — 您的資料僅供居家醫療評估使用</div>
+  </section>
+
+  <!-- 感謝頁 -->
+  <section id="hcThanks" class="hidden">
+    <div class="hc-thanks">
+      <div class="big">✅</div>
+      <h2>已收到您的申請</h2>
+      <p>專人將盡快與您電話聯絡，<br>說明居家醫療服務內容與後續安排。<br><br>感謝您的填寫 🙏</p>
+    </div>
+    <div class="footer">立群醫療體系 &copy; 2026</div>
+  </section>
+
+</div>
+
 <!-- ═══ Thank You ═══ -->
 <div class="thank-you" id="thankYou">
   <div class="ty-check">✓</div>
@@ -1506,6 +1800,8 @@ function setLanguage(lang) {
   }
 
   // ── 畫面切換 helpers ──
+  // 掛到 window：居家醫療畫面用 inline onclick="showScreen(...)" 呼叫，
+  // 此函式定義在 IIFE 內部，inline handler 是在全域作用域執行，故必須外掛。
   function showScreen(id) {
     ['s-router', 'visitScreen', 'consentScreen', 'regScreen', 'formContainer',
      'hcConsent', 'hcForm', 'hcThanks'].forEach(s => {
@@ -1514,6 +1810,7 @@ function setLanguage(lang) {
     });
     window.scrollTo(0, 0);
   }
+  window.showScreen = showScreen;
 
   // ── 入口分流 ──
   document.getElementById('routerIntake').addEventListener('click', () => {
@@ -1522,6 +1819,15 @@ function setLanguage(lang) {
   document.getElementById('routerHomecare').addEventListener('click', () => {
     showScreen('hcConsent');
   });
+
+  // ── 居家 chip 單選（記錄選值到 dataset）── inline onclick 用，需掛到 window（理由同上）
+  function hcPick(el) {
+    const box = el.parentElement;
+    box.querySelectorAll('.hc-chip').forEach(c => c.classList.remove('on'));
+    el.classList.add('on');
+    box.dataset.value = el.textContent.trim();
+  }
+  window.hcPick = hcPick;
 
   // ── 初診/複診選擇 ──
   document.getElementById('choiceNew').addEventListener('click', () => {
