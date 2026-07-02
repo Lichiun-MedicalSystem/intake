@@ -754,8 +754,34 @@
 </head>
 <body>
 
+<!-- ═══ 入口分流 ═══ -->
+<div class="visit-screen" id="s-router">
+  <div class="header">
+    <img src="logo.png" alt="立群" class="logo-img">
+    <h1>立群醫療體系</h1>
+    <p class="subtitle">請選擇您要辦理的項目</p>
+  </div>
+  <div class="visit-choices">
+    <div class="visit-choice" id="routerIntake">
+      <div class="visit-choice-icon new">📋</div>
+      <div>
+        <div class="visit-choice-title">看診問診填寫</div>
+        <div class="visit-choice-desc">初診 / 複診，看診前填寫問診表</div>
+      </div>
+    </div>
+    <div class="visit-choice" id="routerHomecare">
+      <div class="visit-choice-icon return">🏠</div>
+      <div>
+        <div class="visit-choice-title">居家醫療需求申請</div>
+        <div class="visit-choice-desc">行動不便、需到府醫療服務（抽血／慢箋／傷口換藥等）</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">立群醫療體系 &copy; 2026</div>
+</div>
+
 <!-- ═══ Visit Type Selection ═══ -->
-<div class="visit-screen" id="visitScreen">
+<div class="visit-screen hidden" id="visitScreen">
   <div class="header">
     <img src="logo.png" alt="立群" class="logo-img">
     <h1 data-i18n="pageTitle">立群醫療體系 問診表單</h1>
@@ -1481,11 +1507,21 @@ function setLanguage(lang) {
 
   // ── 畫面切換 helpers ──
   function showScreen(id) {
-    ['visitScreen', 'consentScreen', 'regScreen', 'formContainer'].forEach(s => {
-      document.getElementById(s).classList.toggle('hidden', s !== id);
+    ['s-router', 'visitScreen', 'consentScreen', 'regScreen', 'formContainer',
+     'hcConsent', 'hcForm', 'hcThanks'].forEach(s => {
+      const el = document.getElementById(s);
+      if (el) el.classList.toggle('hidden', s !== id);
     });
     window.scrollTo(0, 0);
   }
+
+  // ── 入口分流 ──
+  document.getElementById('routerIntake').addEventListener('click', () => {
+    showScreen('visitScreen');
+  });
+  document.getElementById('routerHomecare').addEventListener('click', () => {
+    showScreen('hcConsent');
+  });
 
   // ── 初診/複診選擇 ──
   document.getElementById('choiceNew').addEventListener('click', () => {
