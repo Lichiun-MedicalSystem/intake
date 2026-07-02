@@ -52,3 +52,26 @@ test('慢箋：選圖後出現縮圖且 hcPhotos 累積', async ({ page }) => {
   await expect.poll(() => page.evaluate(() => window.hcPhotos.length)).toBe(1);
   await expect.poll(() => page.evaluate(() => window.hcPhotos[0].startsWith('data:image/jpeg'))).toBe(true);
 });
+
+test('居家：缺必填擋下；填完送出到感謝頁且 payload 正確', async ({ page }) => {
+  await page.goto(FORM);
+  await page.locator('#routerHomecare').click();
+  await page.locator('#hcConsent').getByText('我已閱讀並同意').click();
+
+  page.on('dialog', d => d.accept());          // 缺必填會 alert
+  await page.locator('#hcSubmitBtn').click();
+  await expect(page.locator('#hcForm')).toBeVisible();   // 沒前進
+
+  let posted = null;
+  await page.route('**/script.google.com/**', route => {
+    posted = route.request().postData();
+    route.fulfill({ status: 200, body: '' });
+  });
+  await page.selectOption('#hcBranch', { label: '立群診所' });
+  await page.fill('#hcPatientName', '測試病人');
+  await page.fill('#hcContactPhone', '0912345678');
+  await page.locator('#hcSubmitBtn').click();
+  await expect(page.locator('#hcThanks')).toBeVisible();
+  expect(posted).toContain('"formType":"homecare"');
+  expect(posted).toContain('測試病人');
+});

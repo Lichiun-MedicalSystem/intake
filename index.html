@@ -2116,6 +2116,69 @@ function setLanguage(lang) {
     document.getElementById('tyName').textContent = data.name + greetSuffix;
   });
 
+  // ── 居家：蒐集欄位 ──
+  function collectHomecare() {
+    const chip = f => (document.querySelector(`.hc-chips[data-field="${f}"]`)?.dataset.value || '');
+    const val = id => (document.getElementById(id)?.value.trim() || '');
+    const birthRaw = val('hcBirthday'); // yyyy-MM-dd
+    let birthday = '';
+    if (birthRaw) {
+      const [y, m, d] = birthRaw.split('-');
+      birthday = String(parseInt(y) - 1911).padStart(3, '0') + m + d;
+    }
+    const now = new Date();
+    const wd = '日一二三四五六'[now.getDay()];
+    return {
+      formType: 'homecare',
+      timestamp: now.toISOString(),
+      date: `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}（${wd}）${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`,
+      branch: val('hcBranch'),
+      patientName: val('hcPatientName'),
+      sex: chip('sex'),
+      nationalId: val('hcNationalId').toUpperCase(),
+      birthday: birthday,
+      phoneDay: val('hcPhoneDay'),
+      phoneNight: val('hcPhoneNight'),
+      address: val('hcAddress'),
+      livingStatus: chip('living'),
+      spokenLanguage: chip('lang'),
+      welfareStatus: chip('welfare'),
+      contactName: val('hcContactName'),
+      contactRelation: val('hcContactRelation'),
+      contactPhone: val('hcContactPhone'),
+      reason: val('hcReason'),
+      preferredTime: chip('preferred'),
+      language: 'zh-Hant',
+      rxPhotos: hcPhotos,
+    };
+  }
+
+  // ── 居家送出 ──
+  document.getElementById('hcSubmitBtn').addEventListener('click', async () => {
+    const data = collectHomecare();
+    const miss = [];
+    if (!data.branch) miss.push('申請院區');
+    if (!data.patientName) miss.push('病人姓名');
+    if (!data.contactPhone) miss.push('聯絡電話');
+    if (miss.length) { alert('請填寫：' + miss.join('、')); return; }
+
+    const btn = document.getElementById('hcSubmitBtn');
+    btn.disabled = true;
+    btn.textContent = '送出中...';
+    if (APPS_SCRIPT_URL) {
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST', mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify(data),
+        });
+      } catch (e) { console.error('居家送出失敗:', e); }
+    } else {
+      console.log('居家表單資料:', JSON.stringify(data, null, 2));
+    }
+    showScreen('hcThanks');
+  });
+
   // Reset name style
   document.getElementById('name').addEventListener('input', function() {
     this.style.borderColor = '';
