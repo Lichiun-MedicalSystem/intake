@@ -56,7 +56,19 @@ const HEADERS_ZH = [
  */
 function doPost(e) {
   try {
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    // 解析 JSON（支援 application/json 和 text/plain 兩種格式）
+    const raw = e.postData.contents;
+    const data = JSON.parse(raw);
+
+    // 居家醫療申請走獨立分頁與流程（寫「居家醫療申請」分頁 + 慢箋存 Drive + Email 通知）
+    if (data.formType === 'homecare') {
+      return handleHomecare_(data);
+    }
+
+    // 用 getSheets()[0]（永遠第一張=問診分頁），不依賴「作用中分頁」——
+    // 加了「居家醫療申請」第二張分頁後，getActiveSheet() 會被「人在 UI 點開居家分頁」改掉，
+    // 導致問診寫/讀跑到錯的分頁（資料損毀）。改抓固定第一張避免此耦合。
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
 
     // 如果是空白試算表，先寫入表頭
     if (sheet.getLastRow() === 0) {
@@ -68,10 +80,6 @@ function doPost(e) {
       headerRange.setFontColor('#FFFFFF');
       sheet.setFrozenRows(1);
     }
-
-    // 解析 JSON（支援 application/json 和 text/plain 兩種格式）
-    const raw = e.postData.contents;
-    const data = JSON.parse(raw);
 
     // 地址翻譯：非繁中填寫時，自動翻成繁中（覆蓋原文）
     if (data.address && data.language && data.language !== 'zh-Hant') {
@@ -132,7 +140,10 @@ function doGet(e) {
   // action === 'today'
   try {
     const filterBranch = (e && e.parameter && e.parameter.branch) || '';
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    // 用 getSheets()[0]（永遠第一張=問診分頁），不依賴「作用中分頁」——
+    // 加了「居家醫療申請」第二張分頁後，getActiveSheet() 會被「人在 UI 點開居家分頁」改掉，
+    // 導致問診寫/讀跑到錯的分頁（資料損毀）。改抓固定第一張避免此耦合。
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
     const lastRow = sheet.getLastRow();
 
     if (lastRow <= 1) {
@@ -179,4 +190,124 @@ function doGet(e) {
       .createTextOutput(JSON.stringify({ status: 'error', message: err.toString() }))
       .setMimeType(ContentService.MimeType.JSON);
   }
+}
+
+// ═══════════════════ 居家醫療申請 ═══════════════════
+const HOMECARE_SHEET = '居家醫療申請';
+const HOMECARE_HEADERS = [
+  'timestamp', 'date', 'branch', 'patientName', 'sex', 'nationalId', 'birthday',
+  'phoneDay', 'phoneNight', 'address', 'livingStatus', 'spokenLanguage', 'welfareStatus',
+  'contactName', 'contactRelation', 'contactPhone', 'reason', 'preferredTime',
+  'rxPhotoUrls', 'language', 'status', 'handledBy', 'handledAt', 'note',
+];
+const HOMECARE_HEADERS_ZH = [
+  '時間戳記', '日期時間', '申請院區', '病人姓名', '性別', '身分證號', '出生日期',
+  '電話(日)', '電話(夜)', '居住地址', '居住狀況', '常用語言', '社福身分別',
+  '主要聯絡人', '與病人關係', '聯絡電話', '申請原因', '希望聯絡時段',
+  '慢箋照片連結', '填寫語言', '處理狀態', '處理人', '處理時間', '備註',
+];
+const HOMECARE_NOTIFY_EMAIL = 'chiao1988ju@gmail.com';
+const RX_FOLDER_NAME = '居家醫療慢箋';
+
+/**
+ * 居家醫療申請處理：寫「居家醫療申請」分頁 + 慢箋存 Drive + Email 通知。
+ * 順序刻意「先寫列、再存慢箋、再寄信」——即使 Drive/Gmail 尚未授權或失敗，
+ * 核心申請資料一定先落 Sheet，不會整筆遺失。
+ */
+function handleHomecare_(data) {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    // 問診 doPost/doGet 已改用 getSheets()[0]（不依賴作用中分頁），故此處不需再管 active sheet
+    let sheet = ss.getSheetByName(HOMECARE_SHEET);
+    if (!sheet) {
+      sheet = ss.insertSheet(HOMECARE_SHEET);
+      sheet.appendRow(HOMECARE_HEADERS_ZH);
+      const hr = sheet.getRange(1, 1, 1, HOMECARE_HEADERS_ZH.length);
+      hr.setFontWeight('bold').setBackground('#0E7490').setFontColor('#FFFFFF');
+      sheet.setFrozenRows(1);
+    }
+
+    // 先寫入列（rxPhotoUrls 先留空，成功存 Drive 後再回填該格）
+    const rowObj = Object.assign({}, data, {
+      rxPhotoUrls: '', status: '待聯絡', handledBy: '', handledAt: '', note: '',
+    });
+    const row = HOMECARE_HEADERS.map(function (k) { return rowObj[k] != null ? rowObj[k] : ''; });
+    const newRow = sheet.getLastRow() + 1;
+    ['nationalId', 'phoneDay', 'phoneNight', 'birthday', 'contactPhone'].forEach(function (k) {
+      const idx = HOMECARE_HEADERS.indexOf(k);
+      if (idx >= 0) sheet.getRange(newRow, idx + 1).setNumberFormat('@');
+    });
+    sheet.getRange(newRow, 1, 1, row.length).setValues([row]);
+
+    // 慢箋存 Drive（best-effort；失敗不影響已寫入的列）
+    let rxPhotoUrls = '';
+    try {
+      rxPhotoUrls = saveRxPhotos_(data.rxPhotos, data.patientName);
+      if (rxPhotoUrls) {
+        const idx = HOMECARE_HEADERS.indexOf('rxPhotoUrls');
+        sheet.getRange(newRow, idx + 1).setValue(rxPhotoUrls);
+      }
+    } catch (photoErr) {
+      console.error('居家慢箋存 Drive 失敗: ' + photoErr);
+    }
+
+    // Email 通知承辦人員（失敗不影響已寫入資料）
+    try {
+      const sheetUrl = ss.getUrl() + '#gid=' + sheet.getSheetId();
+      const body =
+        '有一筆新的居家醫療需求申請：\n\n' +
+        '院區：' + (data.branch || '') + '\n' +
+        '病人姓名：' + (data.patientName || '') + '\n' +
+        '聯絡電話：' + (data.contactPhone || '') + '\n' +
+        '主要聯絡人：' + (data.contactName || '') + '（' + (data.contactRelation || '') + '）\n' +
+        '申請原因：' + (data.reason || '') + '\n' +
+        '希望聯絡時段：' + (data.preferredTime || '') + '\n' +
+        '慢箋照片：' + (rxPhotoUrls || '（無）') + '\n\n' +
+        '請至清單查看與聯繫：\n' + sheetUrl;
+      MailApp.sendEmail(HOMECARE_NOTIFY_EMAIL,
+        '【居家醫療申請】' + (data.patientName || '') + ' — ' + (data.branch || ''), body);
+    } catch (mailErr) {
+      console.error('居家通知信寄送失敗: ' + mailErr);
+    }
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'ok' }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'error', message: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/**
+ * 慢箋 base64 dataURL 陣列 → 存進「居家醫療慢箋」Drive 資料夾（A 模式：知道連結可看），
+ * 回傳逗號分隔的檢視連結。無照片回空字串。
+ */
+function saveRxPhotos_(dataUrls, patientName) {
+  if (!dataUrls || !dataUrls.length) return '';
+  const it = DriveApp.getFoldersByName(RX_FOLDER_NAME);
+  const folder = it.hasNext() ? it.next() : DriveApp.createFolder(RX_FOLDER_NAME);
+  const urls = [];
+  const stamp = Utilities.formatDate(new Date(), 'Asia/Taipei', 'yyyyMMdd_HHmmss');
+  dataUrls.forEach(function (du, i) {
+    const m = String(du).match(/^data:(image\/\w+);base64,(.+)$/);
+    if (!m) return;
+    const blob = Utilities.newBlob(Utilities.base64Decode(m[2]), m[1],
+      '慢箋_' + (patientName || '未署名') + '_' + stamp + '_' + (i + 1) + '.jpg');
+    const file = folder.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    urls.push(file.getUrl());
+  });
+  return urls.join(',');
+}
+
+/**
+ * 一次性授權用：在 Apps Script 編輯器手動選此函式按「執行」，
+ * 觸發 Drive + Gmail 授權同意畫面（webapp executeAs=USER_DEPLOYING 需擁有者先授權這兩個 scope）。
+ */
+function __authorizeHomecareScopes() {
+  DriveApp.getRootFolder();
+  MailApp.getRemainingDailyQuota();
 }

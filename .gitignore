@@ -1,1 +1,5 @@
 _clasp/
+node_modules/
+test-results/
+playwright-report/
+.superpowers/
