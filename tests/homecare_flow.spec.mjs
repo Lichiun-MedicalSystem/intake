@@ -4,6 +4,18 @@ import path from 'path';
 
 const FORM = pathToFileURL(path.resolve('index.html')).href;
 
+test('?form=homecare 掃專屬 QR 直接進居家同意頁（跳過分流）', async ({ page }) => {
+  await page.goto(FORM + '?form=homecare');
+  await expect(page.locator('#hcConsent')).toBeVisible();
+  await expect(page.locator('#s-router')).toBeHidden();
+});
+
+test('?form=homecare&branch=立群診所 預選院區', async ({ page }) => {
+  await page.goto(FORM + '?form=homecare&branch=' + encodeURIComponent('立群診所'));
+  await page.locator('#hcConsent').getByText('我已閱讀並同意').click();
+  await expect(page.locator('#hcBranch')).toHaveValue('立群診所');
+});
+
 test('router 顯示兩個入口，問診走原流程、居家走居家分支', async ({ page }) => {
   await page.goto(FORM);
   await expect(page.locator('#routerIntake')).toBeVisible();

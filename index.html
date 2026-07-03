@@ -1812,6 +1812,15 @@ function setLanguage(lang) {
   }
   window.showScreen = showScreen;
 
+  // ?form=homecare → 掃專屬 QR code 直接進居家醫療流程（跳過分流頁）；若帶 ?branch= 則預選院區
+  if (urlParams.get('form') === 'homecare') {
+    if (BRANCH) {
+      const hb = document.getElementById('hcBranch');
+      if (hb && [...hb.options].some(o => o.value === BRANCH)) hb.value = BRANCH;
+    }
+    showScreen('hcConsent');
+  }
+
   // ── 入口分流 ──
   document.getElementById('routerIntake').addEventListener('click', () => {
     showScreen('visitScreen');
