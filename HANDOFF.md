@@ -85,16 +85,14 @@
 6. ❓ 慢箋照片存取模式 A/B（見上），建議 B。
 7. 2026-06-25 已做靜態 mockup：`intake_form/homecare_mockup.html`（純參考、未接後端）。
 
-### 進度（2026-07-02）— Phase 1 前端完成，Apps Script 待續
-- **設計 spec**：`docs/superpowers/specs/2026-07-02-homecare-request-design.md`
-- **實作計畫**：`docs/superpowers/plans/2026-07-02-homecare-intake-form.md`（8 task）
-- **branch**：`feat/homecare-intake`（已 push origin）
-- ✅ **Task 1-4 完成**（前端，5/5 Playwright 綠、各有 reviewer 驗過）：
-  - T1 router 分流 `7a2c4b2`｜T2 居家畫面+院區下拉 `8c03df5`｜T3 慢箋壓縮 `c720370`｜T4 送出 `6a74b2e`
-  - 定案：通知走 Email→`chiao1988ju@gmail.com`；慢箋 A 模式+提示只拍藥物；清單頁做進 clinic-scheduler（=Plan 2）
-- ⏸ **續作點 = Task 5**（需擁有 script 的 Google 帳號 clasp 登入）：
-  1. `clasp pull` 確認 `_clasp/程式碼.js` 為線上最新
-  2. Task 5 doPost 依 `formType` 分流寫「居家醫療申請」分頁 → Task 6 慢箋存 Drive(A) → Task 7 MailApp 通知 → Task 8 正式部署(同 Deploy ID)+手機 e2e+同步 apps_script.js
-  3. clasp v3.3 指令與計畫 v2 語法可能不同，deploy 時現場校準（或用 clasp-deployer agent）
-  4. 手動步驟：Task 6 把 Drive「居家醫療慢箋」資料夾分享給承辦人員
-- 前置（Plan 2 用，非 Phase 1）：`17Zv7…` share 給 `clinic-scheduler@…` 服務帳號、承辦人員開 clinic-scheduler 登入帳號
+### ✅ Phase 1 完成上線（2026-07-02）
+- **設計 spec**：`docs/superpowers/specs/2026-07-02-homecare-request-design.md`；**計畫**：`docs/superpowers/plans/2026-07-02-homecare-intake-form.md`
+- **前端**（index.html，已 merge master → GitHub Pages）：router 分流〔問診〕/〔居家〕；居家同意→表單（附圖第一部分+院區下拉+申請說明+慢箋拍照壓縮）→送出；`#hcRoot` 隔離不干擾問診；5/5 Playwright 綠（`tests/homecare_flow.spec.mjs`）。
+- **後端**（apps_script.js，正式部署 **@15**，Deploy ID 不變）：`doPost` 依 `formType` 分流 → `handleHomecare_` 寫「居家醫療申請」分頁 + 慢箋存 Drive(A 模式) + `MailApp` 通知 `chiao1988ju@gmail.com`。一次性授權函式 `__authorizeHomecareScopes`（已授權）。
+- **⚠️ 關鍵修正（最終 review 抓到，勿回退）**：問診 `doPost`/`doGet` 原用 `getActiveSheet()`，加第二分頁後會被「人點居家分頁」污染 → 問診寫錯分頁 + Lab Clipper 讀今日問診讀到垃圾。**改用 `getSheets()[0]`（固定第一張=工作表1）徹底解耦**。已驗：居家分頁 active 時送問診仍正確進工作表1。
+- **Minor 未修（非阻塞）**：慢箋 EXIF 轉向未套用（直式手機照可能側躺）；小圖仍重編碼。
+- **Plan 2（未做）= clinic-scheduler 清單頁**：後端讀「居家醫療申請」分頁 API + 前端 `/homecare` 卡片頁（登入後）。前置：`17Zv7…` share 給 `clinic-scheduler@ai-assistant-492908.iam.gserviceaccount.com`（編輯）、承辦人員開 clinic-scheduler 登入帳號；慢箋 A 模式。
+
+### 收尾提醒（人工）
+- 刪測試列（工作表1 的 T888「問診防呆測試」）。
+- Drive「居家醫療慢箋」資料夾分享給 `chiao1988ju@gmail.com`（檢視者）——承辦人員才點得開慢箋。
