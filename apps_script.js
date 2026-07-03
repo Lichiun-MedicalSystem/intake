@@ -206,7 +206,6 @@ const HOMECARE_HEADERS_ZH = [
   '主要聯絡人', '與病人關係', '聯絡電話', '申請原因', '希望聯絡時段',
   '慢箋照片連結', '填寫語言', '處理狀態', '處理人', '處理時間', '備註',
 ];
-// 公開 repo 參考版：承辦人員 email 已遮蔽。Google 端實際部署的 程式碼.js 保留真值，改真值只改 Google 端。
 const HOMECARE_NOTIFY_EMAIL = 'REDACTED@example.com';
 const RX_FOLDER_NAME = '居家醫療慢箋';
 
@@ -215,18 +214,42 @@ const RX_FOLDER_NAME = '居家醫療慢箋';
  * 順序刻意「先寫列、再存慢箋、再寄信」——即使 Drive/Gmail 尚未授權或失敗，
  * 核心申請資料一定先落 Sheet，不會整筆遺失。
  */
+/**
+ * 取得（或首次建立）居家醫療專屬試算表。ID 存 Script Properties `HOMECARE_SS_ID`。
+ * 與問診試算表分家 → 只把這份分享給承辦人，她就看不到問診病患資料。
+ */
+function getHomecareSpreadsheet_() {
+  const props = PropertiesService.getScriptProperties();
+  const id = props.getProperty('HOMECARE_SS_ID');
+  if (id) {
+    return SpreadsheetApp.openById(id);
+  }
+  const ss = SpreadsheetApp.create('立群居家醫療申請');
+  const sheet = ss.getSheets()[0];
+  sheet.setName(HOMECARE_SHEET);
+  sheet.appendRow(HOMECARE_HEADERS_ZH);
+  const hr = sheet.getRange(1, 1, 1, HOMECARE_HEADERS_ZH.length);
+  hr.setFontWeight('bold').setBackground('#0E7490').setFontColor('#FFFFFF');
+  sheet.setFrozenRows(1);
+  props.setProperty('HOMECARE_SS_ID', ss.getId());
+  return ss;
+}
+
+/**
+ * 一次性：在 Apps Script 編輯器手動執行此函式，立即建立/取得居家試算表，
+ * 並在執行紀錄印出 URL + ID（拿去分享給承辦人 + 回報記錄）。
+ */
+function __setupHomecareSheet() {
+  const ss = getHomecareSpreadsheet_();
+  Logger.log('居家試算表 URL: ' + ss.getUrl());
+  Logger.log('居家試算表 ID: ' + ss.getId());
+}
+
 function handleHomecare_(data) {
   try {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    // 問診 doPost/doGet 已改用 getSheets()[0]（不依賴作用中分頁），故此處不需再管 active sheet
-    let sheet = ss.getSheetByName(HOMECARE_SHEET);
-    if (!sheet) {
-      sheet = ss.insertSheet(HOMECARE_SHEET);
-      sheet.appendRow(HOMECARE_HEADERS_ZH);
-      const hr = sheet.getRange(1, 1, 1, HOMECARE_HEADERS_ZH.length);
-      hr.setFontWeight('bold').setBackground('#0E7490').setFontColor('#FFFFFF');
-      sheet.setFrozenRows(1);
-    }
+    // 居家資料寫進「獨立試算表」（與問診試算表分家），可單獨分享給承辦人、不會看到問診 PII
+    const ss = getHomecareSpreadsheet_();
+    const sheet = ss.getSheets()[0];
 
     // 先寫入列（rxPhotoUrls 先留空，成功存 Drive 後再回填該格）
     const rowObj = Object.assign({}, data, {
