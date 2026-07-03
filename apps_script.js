@@ -65,7 +65,10 @@ function doPost(e) {
       return handleHomecare_(data);
     }
 
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    // 用 getSheets()[0]（永遠第一張=問診分頁），不依賴「作用中分頁」——
+    // 加了「居家醫療申請」第二張分頁後，getActiveSheet() 會被「人在 UI 點開居家分頁」改掉，
+    // 導致問診寫/讀跑到錯的分頁（資料損毀）。改抓固定第一張避免此耦合。
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
 
     // 如果是空白試算表，先寫入表頭
     if (sheet.getLastRow() === 0) {
@@ -137,7 +140,10 @@ function doGet(e) {
   // action === 'today'
   try {
     const filterBranch = (e && e.parameter && e.parameter.branch) || '';
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    // 用 getSheets()[0]（永遠第一張=問診分頁），不依賴「作用中分頁」——
+    // 加了「居家醫療申請」第二張分頁後，getActiveSheet() 會被「人在 UI 點開居家分頁」改掉，
+    // 導致問診寫/讀跑到錯的分頁（資料損毀）。改抓固定第一張避免此耦合。
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
     const lastRow = sheet.getLastRow();
 
     if (lastRow <= 1) {
@@ -211,9 +217,7 @@ const RX_FOLDER_NAME = '居家醫療慢箋';
 function handleHomecare_(data) {
   try {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
-    // insertSheet 會把新分頁設為 active，問診 doPost 依賴 getActiveSheet() → 記住進入時的 active，最後還原
-    const originalActive = ss.getActiveSheet();
-
+    // 問診 doPost/doGet 已改用 getSheets()[0]（不依賴作用中分頁），故此處不需再管 active sheet
     let sheet = ss.getSheetByName(HOMECARE_SHEET);
     if (!sheet) {
       sheet = ss.insertSheet(HOMECARE_SHEET);
@@ -246,9 +250,6 @@ function handleHomecare_(data) {
     } catch (photoErr) {
       console.error('居家慢箋存 Drive 失敗: ' + photoErr);
     }
-
-    // insertSheet 造成的 active 變動還原，保護問診 doPost
-    if (originalActive) ss.setActiveSheet(originalActive);
 
     // Email 通知承辦人員（失敗不影響已寫入資料）
     try {
