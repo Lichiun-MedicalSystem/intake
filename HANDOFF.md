@@ -91,7 +91,8 @@
 - **後端**（apps_script.js，正式部署 **@15**，Deploy ID 不變）：`doPost` 依 `formType` 分流 → `handleHomecare_` 寫「居家醫療申請」分頁 + 慢箋存 Drive(A 模式) + `MailApp` 通知 `REDACTED@example.com`。一次性授權函式 `__authorizeHomecareScopes`（已授權）。
 - **⚠️ 關鍵修正（最終 review 抓到，勿回退）**：問診 `doPost`/`doGet` 原用 `getActiveSheet()`，加第二分頁後會被「人點居家分頁」污染 → 問診寫錯分頁 + Lab Clipper 讀今日問診讀到垃圾。**改用 `getSheets()[0]`（固定第一張=工作表1）徹底解耦**。已驗：居家分頁 active 時送問診仍正確進工作表1。
 - **Minor 未修（非阻塞）**：慢箋 EXIF 轉向未套用（直式手機照可能側躺）；小圖仍重編碼。
-- **Plan 2（未做）= clinic-scheduler 清單頁**：後端讀「居家醫療申請」分頁 API + 前端 `/homecare` 卡片頁（登入後）。前置：`17Zv7…` share 給 `clinic-scheduler@ai-assistant-492908.iam.gserviceaccount.com`（編輯）、承辦人員開 clinic-scheduler 登入帳號；慢箋 A 模式。
+- **⭐ 居家改寫獨立試算表（@16，2026-07-03）**：居家資料不再寫進問診主表，改寫**專屬試算表「立群居家醫療申請」**（ID `1nnhrmL5Bt0ZQKhdScbbuQEgP4_W3J2g9KRYH0Dxsi84`，存於 Script Property `HOMECARE_SS_ID`）。目的：承辦人只需被分享這份、**永遠看不到問診 PII**（Google Sheets 無法只分享單一分頁）。`getHomecareSpreadsheet_()` 首次自動建立、`__setupHomecareSheet()` 一次性取 URL/ID。
+- **Plan 2（未做）= clinic-scheduler 清單頁**：後端讀**居家專屬試算表 `1nnhrmL5…`**（不是問診主表）+ 前端 `/homecare` 卡片頁（登入後）。前置：把 `1nnhrmL5…` share 給 `clinic-scheduler@ai-assistant-492908.iam.gserviceaccount.com`（編輯）、承辦人員開 clinic-scheduler 登入帳號；慢箋 A 模式。
 
 ### 收尾提醒（人工）
 - 刪測試列（工作表1 的 T888「問診防呆測試」）。
