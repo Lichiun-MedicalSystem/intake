@@ -58,8 +58,8 @@
   - ✅ 加返回鍵（同意頁/表單頁）。
   - ⚠️ 收**身分證號 + 慢箋照片** → PII 極重：Sheet 鎖私有、Drive 資料夾只分享給承辦人員。
 - **後端**：同一試算表（`17Zv7FAPNgILDkwpr3urnFpPs9wt56rWgcxmvV_NT28E`）**新增分頁「居家醫療申請」**；`doPost` 依 `formType`(intake/homecare) 決定寫哪頁；多一欄「處理狀態」(預設「待聯絡」)。
-- **通知 = Email**（承辦人員不走 Telegram）：Apps Script `doPost` 收到 homecare 時 `MailApp.sendEmail` 寄給 `chiao1988ju@gmail.com`（姓名/電話/院區/需求）。純 Apps Script 內完成。
-- **慢箋 Drive 資料夾**分享給 `chiao1988ju@gmail.com`。
+- **通知 = Email**（承辦人員不走 Telegram）：Apps Script `doPost` 收到 homecare 時 `MailApp.sendEmail` 寄給 `REDACTED@example.com`（姓名/電話/院區/需求）。純 Apps Script 內完成。
+- **慢箋 Drive 資料夾**分享給 `REDACTED@example.com`。
 
 ### 清單頁 = 做進 clinic-scheduler（2026-06-28 定案）
 不做獨立 GitHub Pages 清單頁 → 做進 **clinic-scheduler**（已有登入系統，PII 頁面天生受保護；已有 gspread + Service Account）。範圍跨 3 塊：
@@ -68,7 +68,7 @@
 - ③ clinic-scheduler 前端（Next.js）：新頁 `/homecare` 卡片清單（電話直撥/慢箋縮圖/篩選/狀態按鈕），登入後可見
 **前置**：
 - 問診試算表 `17Zv7…` share 給 `clinic-scheduler@ai-assistant-492908.iam.gserviceaccount.com`（**編輯**權限）。
-- 承辦人員 `chiao1988ju@gmail.com` 要開一個 clinic-scheduler 登入帳號（users 分頁）。
+- 承辦人員 `REDACTED@example.com` 要開一個 clinic-scheduler 登入帳號（users 分頁）。
 - ❓**慢箋照片存取模式待你拍板**：A 知道連結可看（快、但外流即曝光）／ B 後端代理只給登入者看（建議，較安全）。
 
 ### ⚠️ 改 Apps Script 注意（CLAUDE.md 既有坑）
@@ -79,7 +79,7 @@
 ### ❓ 待確認
 1. 入口頁放最前面（現有問診零改動）vs 「同意後再分流」——建議前者，待最終拍板。
 2. ✅ 欄位清單全定案（附圖第一部分 + 院區下拉 + 申請說明 + 慢箋拍照 + 返回鍵）。
-3. ✅ 通知走 Email → `chiao1988ju@gmail.com`（不走 Telegram）。
+3. ✅ 通知走 Email → `REDACTED@example.com`（不走 Telegram）。
 4. ✅ 清單頁做進 clinic-scheduler（見上）。
 5. 公開表單濫用防護：v1 先裸奔接受風險，OK？
 6. ❓ 慢箋照片存取模式 A/B（見上），建議 B。
@@ -88,11 +88,11 @@
 ### ✅ Phase 1 完成上線（2026-07-02）
 - **設計 spec**：`docs/superpowers/specs/2026-07-02-homecare-request-design.md`；**計畫**：`docs/superpowers/plans/2026-07-02-homecare-intake-form.md`
 - **前端**（index.html，已 merge master → GitHub Pages）：router 分流〔問診〕/〔居家〕；居家同意→表單（附圖第一部分+院區下拉+申請說明+慢箋拍照壓縮）→送出；`#hcRoot` 隔離不干擾問診；5/5 Playwright 綠（`tests/homecare_flow.spec.mjs`）。
-- **後端**（apps_script.js，正式部署 **@15**，Deploy ID 不變）：`doPost` 依 `formType` 分流 → `handleHomecare_` 寫「居家醫療申請」分頁 + 慢箋存 Drive(A 模式) + `MailApp` 通知 `chiao1988ju@gmail.com`。一次性授權函式 `__authorizeHomecareScopes`（已授權）。
+- **後端**（apps_script.js，正式部署 **@15**，Deploy ID 不變）：`doPost` 依 `formType` 分流 → `handleHomecare_` 寫「居家醫療申請」分頁 + 慢箋存 Drive(A 模式) + `MailApp` 通知 `REDACTED@example.com`。一次性授權函式 `__authorizeHomecareScopes`（已授權）。
 - **⚠️ 關鍵修正（最終 review 抓到，勿回退）**：問診 `doPost`/`doGet` 原用 `getActiveSheet()`，加第二分頁後會被「人點居家分頁」污染 → 問診寫錯分頁 + Lab Clipper 讀今日問診讀到垃圾。**改用 `getSheets()[0]`（固定第一張=工作表1）徹底解耦**。已驗：居家分頁 active 時送問診仍正確進工作表1。
 - **Minor 未修（非阻塞）**：慢箋 EXIF 轉向未套用（直式手機照可能側躺）；小圖仍重編碼。
 - **Plan 2（未做）= clinic-scheduler 清單頁**：後端讀「居家醫療申請」分頁 API + 前端 `/homecare` 卡片頁（登入後）。前置：`17Zv7…` share 給 `clinic-scheduler@ai-assistant-492908.iam.gserviceaccount.com`（編輯）、承辦人員開 clinic-scheduler 登入帳號；慢箋 A 模式。
 
 ### 收尾提醒（人工）
 - 刪測試列（工作表1 的 T888「問診防呆測試」）。
-- Drive「居家醫療慢箋」資料夾分享給 `chiao1988ju@gmail.com`（檢視者）——承辦人員才點得開慢箋。
+- Drive「居家醫療慢箋」資料夾分享給 `REDACTED@example.com`（檢視者）——承辦人員才點得開慢箋。

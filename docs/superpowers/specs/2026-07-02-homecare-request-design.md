@@ -26,7 +26,7 @@
 | D2 | 一位中央專人統籌全六院區 | 承辦人員確認；決定了「集中一頁」而非「各院區個管中樞」 |
 | D3 | 入口頁放最前面（router）分流〔問診〕/〔居家〕 | 現有問診流程零改動、風險最低 |
 | D4 | 欄位 = 附圖第一部分整段 + 院區下拉 + 申請說明 + 慢箋拍照 | 承辦人員定案 |
-| D5 | 通知走 **Email** 給 `chiao1988ju@gmail.com` | 承辦人員不使用 Telegram；Apps Script `MailApp` 零設定 |
+| D5 | 通知走 **Email** 給 `REDACTED@example.com` | 承辦人員不使用 Telegram；Apps Script `MailApp` 零設定 |
 | D6 | 單一資料源 = intake Sheet；clinic-scheduler 即時讀 | 「省空間」是假需求（Sheet 上限千萬格）；即時性已由讀同一份 Sheet 滿足 |
 | D7 | 清單頁做進 **clinic-scheduler**（登入後） | 已有登入系統（PII 天生受保護）+ 已有 gspread + Service Account |
 | D8 | 慢箋照片走 **A 模式**（知道連結可看）+ 提示只拍藥物 | A 最快；「只拍藥物名稱、不拍個資」大幅降低外流風險 |
@@ -43,7 +43,7 @@
   1) 寫入「居家醫療申請」分頁（處理狀態=待聯絡）
   2) 慢箋 base64 → DriveApp 存進「居家醫療慢箋」資料夾
        → 設「知道連結可看」→ 連結寫回該列
-  3) MailApp.sendEmail → chiao1988ju@gmail.com（姓名/電話/院區/需求）
+  3) MailApp.sendEmail → REDACTED@example.com（姓名/電話/院區/需求）
         │
         ▼
 [Google Sheet「居家醫療申請」分頁]  ←── 單一資料源
@@ -117,8 +117,8 @@
 
 **前置（實作前要完成）**
 1. 問診試算表 `17Zv7…` **share 給 `clinic-scheduler@ai-assistant-492908.iam.gserviceaccount.com`（編輯權限）**。
-2. 「居家醫療慢箋」Drive 資料夾 share 給 `chiao1988ju@gmail.com`（檢視）。
-3. 承辦人員 `chiao1988ju@gmail.com` 在 clinic-scheduler `users` 分頁開登入帳號（帳密轉交）。
+2. 「居家醫療慢箋」Drive 資料夾 share 給 `REDACTED@example.com`（檢視）。
+3. 承辦人員 `REDACTED@example.com` 在 clinic-scheduler `users` 分頁開登入帳號（帳密轉交）。
 4. 確認擁有 intake Apps Script 的 Google 帳號（Drive 擁有權 + MailApp 每日配額；消費者帳號 100 封/日足夠）。
 
 **延後（v1.1+）**

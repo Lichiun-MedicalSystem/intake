@@ -206,7 +206,8 @@ const HOMECARE_HEADERS_ZH = [
   '主要聯絡人', '與病人關係', '聯絡電話', '申請原因', '希望聯絡時段',
   '慢箋照片連結', '填寫語言', '處理狀態', '處理人', '處理時間', '備註',
 ];
-const HOMECARE_NOTIFY_EMAIL = 'chiao1988ju@gmail.com';
+// 公開 repo 參考版：承辦人員 email 已遮蔽。Google 端實際部署的 程式碼.js 保留真值，改真值只改 Google 端。
+const HOMECARE_NOTIFY_EMAIL = 'REDACTED@example.com';
 const RX_FOLDER_NAME = '居家醫療慢箋';
 
 /**
