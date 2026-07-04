@@ -19,7 +19,7 @@
 - Apps Script Deploy ID（勿換）：`AKfycbyVFakl4ORVX2mFFgC4h_a694Ow8jBvfTFDQQWuxxi5uxSWM5Q4FMU2TvGUqv4x59Q`（現 @16）
 - 慢箋 Drive 資料夾：「居家醫療慢箋」；承辦人 email 在 Google 端 程式碼.js
 
-## 待做項目
+## 下一步
 1. **Plan 2 = clinic-scheduler 清單頁**：後端讀居家專屬試算表 `1nnhrmL5…` + 前端 `/homecare`（登入後）。前置：該表 share 給 `clinic-scheduler@ai-assistant-492908.iam.gserviceaccount.com`（編輯）+ 承辦人開 clinic-scheduler 登入帳號。
 2. （可選）六院區各自居家 QR（`?form=homecare&branch=X`）
 3. （可選）git 歷史徹底清 email；慢箋改 B 模式（登入才可看）；慢箋 EXIF 轉向
