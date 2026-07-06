@@ -1353,30 +1353,30 @@
         <input type="text" id="hcPatientName" placeholder="請輸入病人姓名">
       </div>
       <div class="hc-field">
-        <label>性別</label>
+        <label>性別<span class="req">*</span></label>
         <div class="hc-chips" data-single data-field="sex">
           <div class="hc-chip" onclick="hcPick(this)">男</div>
           <div class="hc-chip" onclick="hcPick(this)">女</div>
         </div>
       </div>
       <div class="hc-field">
-        <label>身分證號</label>
+        <label>身分證號<span class="req">*</span></label>
         <input type="text" id="hcNationalId" placeholder="A123456789" maxlength="10">
       </div>
       <div class="hc-field">
-        <label>出生日期</label>
+        <label>出生日期<span class="req">*</span></label>
         <input type="date" id="hcBirthday">
       </div>
       <div class="hc-two">
-        <div class="hc-field"><label>電話（日）</label><input type="tel" id="hcPhoneDay" placeholder="日間聯絡"></div>
-        <div class="hc-field"><label>電話（夜）</label><input type="tel" id="hcPhoneNight" placeholder="夜間聯絡"></div>
+        <div class="hc-field"><label>電話／手機（日）<span class="req">*</span></label><input type="tel" id="hcPhoneDay" placeholder="手機或日間電話"></div>
+        <div class="hc-field"><label>電話（夜）</label><input type="tel" id="hcPhoneNight" placeholder="夜間電話（選填）"></div>
       </div>
       <div class="hc-field" style="margin-top:15px;">
-        <label>居住地址</label>
+        <label>居住地址<span class="req">*</span></label>
         <input type="text" id="hcAddress" placeholder="實際居住地址（到府服務用）">
       </div>
       <div class="hc-field">
-        <label>居住狀況</label>
+        <label>居住狀況<span class="req">*</span></label>
         <div class="hc-chips" data-single data-field="living">
           <div class="hc-chip" onclick="hcPick(this)">獨居</div>
           <div class="hc-chip" onclick="hcPick(this)">家人同住</div>
@@ -1385,7 +1385,7 @@
         </div>
       </div>
       <div class="hc-field">
-        <label>常用語言</label>
+        <label>常用語言<span class="req">*</span></label>
         <div class="hc-chips" data-single data-field="lang">
           <div class="hc-chip" onclick="hcPick(this)">國語</div>
           <div class="hc-chip" onclick="hcPick(this)">台語</div>
@@ -1395,7 +1395,7 @@
         </div>
       </div>
       <div class="hc-field">
-        <label>社會福利身分別</label>
+        <label>社會福利身分別<span class="req">*</span></label>
         <div class="hc-chips" data-single data-field="welfare">
           <div class="hc-chip" onclick="hcPick(this)">無</div>
           <div class="hc-chip" onclick="hcPick(this)">低收入戶</div>
@@ -1410,8 +1410,8 @@
     <!-- 主要聯絡人 -->
     <div class="hc-section">
       <div class="hc-section-title">📞 主要聯絡人</div>
-      <div class="hc-field"><label>姓名</label><input type="text" id="hcContactName" placeholder="主要聯絡人姓名"></div>
-      <div class="hc-field"><label>與病人關係</label><input type="text" id="hcContactRelation" placeholder="如：兒子、配偶、看護"></div>
+      <div class="hc-field"><label>姓名<span class="req">*</span></label><input type="text" id="hcContactName" placeholder="主要聯絡人姓名"></div>
+      <div class="hc-field"><label>與病人關係<span class="req">*</span></label><input type="text" id="hcContactRelation" placeholder="如：兒子、配偶、看護"></div>
       <div class="hc-field"><label>聯絡電話／手機<span class="req">*</span></label><input type="tel" id="hcContactPhone" placeholder="方便聯繫的號碼"></div>
     </div>
 
@@ -2162,14 +2162,53 @@ function setLanguage(lang) {
     };
   }
 
+  // ── 台灣身分證檢查碼驗證（能抓少一碼/打錯）──
+  function isValidTWId(id) {
+    id = (id || '').toUpperCase().trim();
+    if (!/^[A-Z][12]\d{8}$/.test(id)) return false;
+    const map = {A:10,B:11,C:12,D:13,E:14,F:15,G:16,H:17,I:34,J:18,K:19,L:20,M:21,N:22,O:35,P:23,Q:24,R:25,S:26,T:27,U:28,V:29,W:32,X:30,Y:31,Z:33};
+    const n = map[id[0]];
+    const digits = [Math.floor(n / 10), n % 10];
+    for (let i = 1; i < 10; i++) digits.push(Number(id[i]));
+    const w = [1, 9, 8, 7, 6, 5, 4, 3, 2, 1, 1];
+    let sum = 0;
+    for (let i = 0; i < 11; i++) sum += digits[i] * w[i];
+    return sum % 10 === 0;
+  }
+  // ── 台灣電話/手機位數檢查（手機 09 開頭需 10 碼）──
+  function isValidTWPhone(p) {
+    const d = (p || '').replace(/\D/g, '');
+    if (d.startsWith('09')) return d.length === 10;
+    return d.length >= 8 && d.length <= 10;
+  }
+
   // ── 居家送出 ──
   document.getElementById('hcSubmitBtn').addEventListener('click', async () => {
     const data = collectHomecare();
+    // 必填檢查
     const miss = [];
     if (!data.branch) miss.push('申請院區');
     if (!data.patientName) miss.push('病人姓名');
-    if (!data.contactPhone) miss.push('聯絡電話');
-    if (miss.length) { alert('請填寫：' + miss.join('、')); return; }
+    if (!data.sex) miss.push('性別');
+    if (!data.nationalId) miss.push('身分證號');
+    if (!data.birthday) miss.push('出生日期');
+    if (!data.phoneDay) miss.push('電話／手機（日）');
+    if (!data.address) miss.push('居住地址');
+    if (!data.livingStatus) miss.push('居住狀況');
+    if (!data.spokenLanguage) miss.push('常用語言');
+    if (!data.welfareStatus) miss.push('社會福利身分別');
+    if (!data.contactName) miss.push('主要聯絡人姓名');
+    if (!data.contactRelation) miss.push('與病人關係');
+    if (!data.contactPhone) miss.push('聯絡電話／手機');
+    if (miss.length) { alert('請填寫必填欄位：\n' + miss.join('、')); return; }
+
+    // 格式檢查（身分證檢查碼 + 電話位數）
+    const bad = [];
+    if (!isValidTWId(data.nationalId)) bad.push('身分證號格式不正確（1 英文字母 + 9 位數字，需通過檢查碼）');
+    if (!isValidTWPhone(data.phoneDay)) bad.push('電話／手機（日）位數不正確（手機為 09 開頭共 10 碼）');
+    if (data.phoneNight && !isValidTWPhone(data.phoneNight)) bad.push('電話（夜）位數不正確');
+    if (!isValidTWPhone(data.contactPhone)) bad.push('聯絡電話／手機 位數不正確');
+    if (bad.length) { alert('請確認以下欄位：\n' + bad.join('\n')); return; }
 
     const btn = document.getElementById('hcSubmitBtn');
     btn.disabled = true;

@@ -65,7 +65,24 @@ test('慢箋：選圖後出現縮圖且 hcPhotos 累積', async ({ page }) => {
   await expect.poll(() => page.evaluate(() => window.hcPhotos[0].startsWith('data:image/jpeg'))).toBe(true);
 });
 
-test('居家：缺必填擋下；填完送出到感謝頁且 payload 正確', async ({ page }) => {
+// 填齊所有必填欄位（A123456789 為通過檢查碼的合法身分證、0912345678 為合法手機）
+async function fillAllRequired(page) {
+  await page.selectOption('#hcBranch', { label: '立群診所' });
+  await page.fill('#hcPatientName', '測試病人');
+  await page.locator('.hc-chips[data-field="sex"]').getByText('女').click();
+  await page.fill('#hcNationalId', 'A123456789');
+  await page.fill('#hcBirthday', '1950-08-15');
+  await page.fill('#hcPhoneDay', '0912345678');
+  await page.fill('#hcAddress', '台中市測試路1號');
+  await page.locator('.hc-chips[data-field="living"]').getByText('家人同住').click();
+  await page.locator('.hc-chips[data-field="lang"]').getByText('台語').click();
+  await page.locator('.hc-chips[data-field="welfare"]').getByText('無', { exact: true }).click();
+  await page.fill('#hcContactName', '測試兒子');
+  await page.fill('#hcContactRelation', '兒子');
+  await page.fill('#hcContactPhone', '0912345678');
+}
+
+test('居家：缺必填擋下；填齊必填送出到感謝頁且 payload 正確', async ({ page }) => {
   await page.goto(FORM);
   await page.locator('#routerHomecare').click();
   await page.locator('#hcConsent').getByText('我已閱讀並同意').click();
@@ -79,11 +96,26 @@ test('居家：缺必填擋下；填完送出到感謝頁且 payload 正確', as
     posted = route.request().postData();
     route.fulfill({ status: 200, body: '' });
   });
-  await page.selectOption('#hcBranch', { label: '立群診所' });
-  await page.fill('#hcPatientName', '測試病人');
-  await page.fill('#hcContactPhone', '0912345678');
+  await fillAllRequired(page);
   await page.locator('#hcSubmitBtn').click();
   await expect(page.locator('#hcThanks')).toBeVisible();
   expect(posted).toContain('"formType":"homecare"');
   expect(posted).toContain('測試病人');
+});
+
+test('居家：身分證檢查碼錯 / 手機少一碼 → 擋下不送出', async ({ page }) => {
+  await page.goto(FORM);
+  await page.locator('#routerHomecare').click();
+  await page.locator('#hcConsent').getByText('我已閱讀並同意').click();
+  page.on('dialog', d => d.accept());
+
+  await fillAllRequired(page);
+  await page.fill('#hcNationalId', 'A123456788');   // 檢查碼錯
+  await page.locator('#hcSubmitBtn').click();
+  await expect(page.locator('#hcForm')).toBeVisible();   // 被擋，沒進感謝頁
+
+  await page.fill('#hcNationalId', 'A123456789');   // 修正身分證
+  await page.fill('#hcPhoneDay', '091234567');      // 手機少一碼
+  await page.locator('#hcSubmitBtn').click();
+  await expect(page.locator('#hcForm')).toBeVisible();   // 仍被擋
 });
