@@ -3,7 +3,7 @@
 
 ## 目前狀態
 - ✅ 問診表單：六院區上線中（掃 QR 填 → Google Sheet → Lab Clipper 桌面讀今日）
-- ✅ 居家醫療需求申請（Phase 1）：2026-07-03 完成上線
+- ✅ 居家醫療需求申請（Phase 1）：完成上線；2026-07-06 加「病人/聯絡人全必填 * + 身分證檢查碼/電話位數驗證」
 - ⬜ Plan 2：clinic-scheduler 清單頁（未做）
 
 ## 架構
@@ -27,9 +27,9 @@
 ## 已知問題 / 坑
 - clasp push 只改 `程式碼.js`，勿新增第二含 `HEADERS` 檔（編譯壞、連 doGet 都掛）
 - **問診 doPost/doGet 用 `getSheets()[0]`**：加第二分頁後 `getActiveSheet()` 會被「人在 UI 點分頁」污染 → 問診資料損毀（最終 review 抓到，已修，**勿回退**）
-- GitHub Pages 偶發「build 成功、deploy 卡 `try again later`」= GitHub 端間歇故障（非程式）；重推或等即可
+- **GitHub Pages 這站 push 觸發的 deploy 常卡 `Deployment failed, try again later`**（build 成功、非我方程式/大小/分鐘）。解法：`gh api -X POST repos/Lichiun-MedicalSystem/intake/pages/builds` 手動重建（通常一次就通、約 40s）；仍卡則 Settings→Pages 切分支再切回。
 - 新增 Drive/Gmail scope 後擁有者要在編輯器跑 `__authorizeHomecareScopes` 授權一次（已做）
-- push 需 `gh auth switch -u Lichiun-MedicalSystem`（intake 是集團 repo）
+- push 需 `gh auth switch -u Lichiun-MedicalSystem`（intake 是集團 repo）；若撞 GCM「unable to get password」→ 用 `git push "https://x-access-token:$(gh auth token)@github.com/Lichiun-MedicalSystem/intake.git" master`
 
 ## 關鍵決策
 - 居家只做病人端登記（專業端「收案申請書」維持紙本、具簽章法律效力）
